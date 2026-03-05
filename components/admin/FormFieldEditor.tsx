@@ -3,8 +3,18 @@
 import { useState } from "react";
 import { DynamicField } from "@/types";
 
+function Spinner() {
+  return (
+    <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
 export function FormFieldEditor({ basePath, initialFields }: { basePath: string; initialFields: DynamicField[] }) {
   const [fields, setFields] = useState<DynamicField[]>(initialFields);
+  const [saving, setSaving] = useState(false);
 
   function addField() {
     setFields((prev) => [
@@ -14,6 +24,8 @@ export function FormFieldEditor({ basePath, initialFields }: { basePath: string;
   }
 
   async function save() {
+    if (saving) return;
+    setSaving(true);
     const formData = new FormData();
     formData.set("form_fields", JSON.stringify(fields));
 
@@ -21,6 +33,7 @@ export function FormFieldEditor({ basePath, initialFields }: { basePath: string;
       method: "PUT",
       body: formData,
     });
+    setSaving(false);
   }
 
   return (
@@ -74,8 +87,8 @@ export function FormFieldEditor({ basePath, initialFields }: { basePath: string;
           </button>
         </div>
       ))}
-      <button onClick={save} className="rounded bg-amber-500 px-3 py-2 font-semibold text-black">
-        Save Fields
+      <button onClick={save} disabled={saving} className="inline-flex items-center justify-center gap-2 rounded bg-amber-500 px-3 py-2 font-semibold text-black disabled:opacity-60">
+        {saving ? <><Spinner />Saving…</> : "Save Fields"}
       </button>
     </div>
   );

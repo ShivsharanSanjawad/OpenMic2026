@@ -64,6 +64,15 @@ function StatusBadge({ status }: { status: Row["paymentStatus"] }) {
   );
 }
 
+function Spinner() {
+  return (
+    <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
 function formatStableDate(dateValue: string) {
   return new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
@@ -329,9 +338,9 @@ export function RegistrationsTable({ basePath, rows }: { basePath: string; rows:
                         <button
                           disabled={busyId === row.id}
                           onClick={(e) => { e.stopPropagation(); void updateStatus(row.id, "VERIFIED"); }}
-                          className="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-xs text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-40"
+                          className="inline-flex items-center gap-1 rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-xs text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-40"
                         >
-                          {busyId === row.id ? "..." : "Verify"}
+                          {busyId === row.id ? <><Spinner />Verifying…</> : "Verify"}
                         </button>
                       )}
                       <button
@@ -469,9 +478,9 @@ export function RegistrationsTable({ basePath, rows }: { basePath: string; rows:
                     <button
                       disabled={busyId === activeRegistration.id}
                       onClick={() => void updateStatus(activeRegistration.id, "VERIFIED", reviewComment || undefined)}
-                      className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500 disabled:opacity-40"
+                      className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500 disabled:opacity-40"
                     >
-                      {busyId === activeRegistration.id ? "Updating..." : "Mark Verified"}
+                      {busyId === activeRegistration.id ? <><Spinner />Updating…</> : "Mark Verified"}
                     </button>
                     <button
                       disabled={busyId === activeRegistration.id || !reviewComment}
@@ -483,16 +492,16 @@ export function RegistrationsTable({ basePath, rows }: { basePath: string; rows:
                         }
                         void handleDecision(activeRegistration.id, "PENDING_CORRECTION");
                       }}
-                      className="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-yellow-500 disabled:opacity-40"
+                      className="inline-flex items-center gap-2 rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-yellow-500 disabled:opacity-40"
                     >
-                      Request Corrections
+                      {busyId === activeRegistration.id ? <><Spinner />Updating…</> : "Request Corrections"}
                     </button>
                     <button
                       disabled={busyId === activeRegistration.id || !reviewComment}
                       onClick={() => void handleDecision(activeRegistration.id, "REJECTED")}
-                      className="rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-40"
+                      className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-40"
                     >
-                      Reject
+                      {busyId === activeRegistration.id ? <><Spinner />Updating…</> : "Reject"}
                     </button>
                   </div>
                 </div>
