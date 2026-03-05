@@ -70,50 +70,92 @@ export function AnnouncementEditor({ basePath, initial }: Props) {
     setBusyKey(null);
   }
 
+  const inputCls = "w-full rounded-lg border border-zinc-700/80 bg-zinc-900 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-amber-500/60 focus:outline-none focus:ring-1 focus:ring-amber-500/30 transition-colors";
+
+  const TYPE_COLORS: Record<string, string> = {
+    INFO: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+    WARNING: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30",
+    SUCCESS: "bg-green-500/15 text-green-300 border-green-500/30",
+    ERROR: "bg-red-500/15 text-red-300 border-red-500/30",
+  };
+
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-5">
+      {/* Create form */}
       <form
         ref={formRef}
         onSubmit={create}
-        className="grid gap-3 rounded-xl border border-zinc-800 p-4"
+        className="rounded-2xl border border-zinc-700/50 bg-zinc-900/50 overflow-hidden"
       >
-        <h3 className="text-lg font-semibold">Create Announcement</h3>
-        <input name="title" required placeholder="Title" className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2" />
-        <textarea name="body" required rows={4} placeholder="Body / markdown" className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2" />
-        <select name="type" className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2">
-          {Object.values(AnnouncementType).map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="isPinned" /> Pin
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="isPublished" /> Publish now
-        </label>
-        <button disabled={creating} className="inline-flex items-center justify-center gap-2 rounded bg-amber-500 px-3 py-2 font-semibold text-black disabled:opacity-60">
-          {creating ? <><Spinner />Creating…</> : "Create"}
-        </button>
+        <div className="border-b border-zinc-800 bg-gradient-to-r from-amber-500/10 to-orange-500/5 px-5 py-4">
+          <h3 className="font-semibold text-amber-300">Create Announcement</h3>
+          <p className="text-xs text-zinc-400 mt-0.5">Publish updates visible to all registered users</p>
+        </div>
+        <div className="p-5 grid gap-3">
+          <input name="title" required placeholder="Announcement title…" className={inputCls} />
+          <textarea name="body" required rows={3} placeholder="Body text…" className={inputCls} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <select name="type" className={inputCls}>
+              {Object.values(AnnouncementType).map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+                <input type="checkbox" name="isPinned" className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-amber-500 focus:ring-amber-500" />
+                Pin to top
+              </label>
+              <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+                <input type="checkbox" name="isPublished" className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-amber-500 focus:ring-amber-500" />
+                Publish now
+              </label>
+            </div>
+          </div>
+          <button disabled={creating} className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black hover:from-amber-400 hover:to-orange-400 disabled:opacity-60 transition-all w-fit">
+            {creating ? <><Spinner />Creating…</> : "Post Announcement"}
+          </button>
+        </div>
       </form>
 
-      <div className="grid gap-3">
-        {items.map((item) => (
-          <article key={item.id} className="rounded-xl border border-zinc-800 p-4">
-            <p className="text-xs text-amber-300">{item.type}</p>
-            <h4 className="text-lg font-semibold">{item.title}</h4>
-            <p className="mt-2 text-sm text-zinc-300">{item.body}</p>
-            <div className="mt-3 flex gap-2">
-              <button onClick={() => togglePublish(item.id, item.isPublished)} disabled={!!busyKey} className="inline-flex items-center gap-1 rounded bg-zinc-800 px-2 py-1 text-xs disabled:opacity-60">
-                {busyKey === `${item.id}_publish` ? <><Spinner />{item.isPublished ? "Unpublishing…" : "Publishing…"}</> : (item.isPublished ? "Unpublish" : "Publish")}
-              </button>
-              <button onClick={() => remove(item.id)} disabled={!!busyKey} className="inline-flex items-center gap-1 rounded bg-red-700 px-2 py-1 text-xs disabled:opacity-60">
-                {busyKey === `${item.id}_delete` ? <><Spinner />Deleting…</> : "Delete"}
-              </button>
-            </div>
-          </article>
-        ))}
+      {/* Existing announcements */}
+      <div className="rounded-2xl border border-zinc-700/50 bg-zinc-900/50 overflow-hidden">
+        <div className="border-b border-zinc-800 px-5 py-4">
+          <h3 className="font-semibold text-zinc-100">Existing Announcements</h3>
+          <p className="text-xs text-zinc-500 mt-0.5">{items.length} announcement{items.length !== 1 ? "s" : ""}</p>
+        </div>
+        {items.length === 0 ? (
+          <p className="px-5 py-8 text-center text-sm text-zinc-500">No announcements yet</p>
+        ) : (
+          <ul className="divide-y divide-zinc-800">
+            {items.map((item) => (
+              <li key={item.id} className="p-4 hover:bg-zinc-800/20 transition-colors">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${TYPE_COLORS[item.type] ?? "bg-zinc-800 text-zinc-300 border-zinc-700"}`}>
+                        {item.type}
+                      </span>
+                      {item.isPinned && <span className="inline-flex items-center rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-xs font-medium text-amber-300">📌 Pinned</span>}
+                      <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${item.isPublished ? "bg-green-500/15 text-green-300 border-green-500/30" : "bg-zinc-800 text-zinc-400 border-zinc-700"}`}>
+                        {item.isPublished ? "Published" : "Draft"}
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-zinc-100">{item.title}</p>
+                    <p className="mt-1 text-xs text-zinc-400 line-clamp-2">{item.body}</p>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button onClick={() => togglePublish(item.id, item.isPublished)} disabled={!!busyKey} className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium disabled:opacity-60 transition-colors ${item.isPublished ? "bg-zinc-700/80 text-zinc-300 hover:bg-zinc-700" : "bg-green-500/20 text-green-300 hover:bg-green-500/30 border border-green-500/30"}`}>
+                      {busyKey === `${item.id}_publish` ? <><Spinner />{item.isPublished ? "Unpublishing…" : "Publishing…"}</> : (item.isPublished ? "Unpublish" : "Publish")}
+                    </button>
+                    <button onClick={() => remove(item.id)} disabled={!!busyKey} className="inline-flex items-center gap-1 rounded-lg bg-red-500/15 border border-red-500/30 px-2.5 py-1.5 text-xs font-medium text-red-400 hover:bg-red-500/25 disabled:opacity-60 transition-colors">
+                      {busyKey === `${item.id}_delete` ? <><Spinner />Deleting…</> : "Delete"}
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

@@ -12,10 +12,13 @@ export default async function AdminAnnouncementsPage({ params }: { params: Promi
   const announcements = await prisma.announcement.findMany({ orderBy: { createdAt: "desc" } });
 
   return (
-    <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-6 py-8 md:grid-cols-[220px_1fr]">
+    <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-4 py-8 md:grid-cols-[220px_1fr]">
       <AdminSidebar basePath={adminPath} />
-      <section className="grid gap-4">
-        <h1 className="text-3xl font-black text-amber-300">Announcement Manager</h1>
+      <section className="grid gap-4 content-start">
+        <div>
+          <h1 className="text-3xl font-black text-amber-300">Announcements</h1>
+          <p className="text-sm text-zinc-400 mt-0.5">Create and manage public-facing announcements</p>
+        </div>
         <AnnouncementEditor basePath={adminPath} initial={announcements} />
       </section>
     </main>

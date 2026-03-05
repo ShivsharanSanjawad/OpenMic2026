@@ -113,7 +113,11 @@ export function RegistrationForm({ settings }: Props) {
       } else {
         form.reset();
         setTeamMembers([""]);
-        setSuccess(`Registration successful! Your ID is: ${data.registrationId}. Please save it to check your status later.`);
+        setSuccess(
+          `🎉 Registration successful! Your registration ID is: ${data.registrationId}. ` +
+          `A confirmation email has been sent to your email address — please check your inbox (and spam/junk folder). ` +
+          `Save your ID to check your payment verification status later.`
+        );
       }
     } catch {
       const message = "Unable to submit registration. Please try again.";

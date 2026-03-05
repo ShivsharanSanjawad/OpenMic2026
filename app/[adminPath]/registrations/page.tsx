@@ -16,11 +16,14 @@ export default async function RegistrationsPage({ params }: { params: Promise<{ 
   });
 
   return (
-    <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-6 py-8 md:grid-cols-[220px_1fr]">
+    <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-4 py-8 md:grid-cols-[220px_1fr]">
       <AdminSidebar basePath={adminPath} />
-      <section className="grid gap-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-black text-amber-300">Registrations</h1>
+      <section className="grid gap-4 content-start">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-black text-amber-300">Registrations</h1>
+            <p className="text-sm text-zinc-400 mt-0.5">Review and manage all submissions</p>
+          </div>
           <ExportButtons basePath={adminPath} />
         </div>
         <RegistrationsTable

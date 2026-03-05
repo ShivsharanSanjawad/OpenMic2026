@@ -45,6 +45,7 @@ export async function PUT(
   const eventDate = sanitizeText(formData.get("event_date"), 120);
   const eventVenue = sanitizeText(formData.get("event_venue"), 180);
   const formFieldsRaw = sanitizeText(formData.get("form_fields"), 4000);
+  const registrationsOpen = formData.get("registrations_open");
   const qrImage = formData.get("qrImage");
 
   if (upiId) await setSetting("upi_id", upiId);
@@ -52,6 +53,10 @@ export async function PUT(
   if (eventDate) await setSetting("event_date", eventDate);
   if (eventVenue) await setSetting("event_venue", eventVenue);
   if (formFieldsRaw) await setSetting("form_fields", formFieldsRaw);
+  // registrations_open can be "true" or "false" — always update when field is present
+  if (registrationsOpen !== null && registrationsOpen !== undefined) {
+    await setSetting("registrations_open", registrationsOpen === "true" ? "true" : "false");
+  }
 
   if (qrImage instanceof File && qrImage.size > 0) {
     if (!qrImage.type.startsWith("image/")) {

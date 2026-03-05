@@ -15,4 +15,5 @@ export type PublicSettings = {
   form_fields: DynamicField[];
   event_date: string;
   event_venue: string;
+  registrations_open: string; // "true" | "false"
 };

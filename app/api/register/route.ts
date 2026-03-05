@@ -55,6 +55,12 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Check if registrations are open
+  const { registrations_open } = await getPublicSettings();
+  if (registrations_open !== "true") {
+    return NextResponse.json({ error: "Registrations are currently closed." }, { status: 403 });
+  }
+
   const formData = await request.formData();
   const screenshot = formData.get("paymentScreenshot");
   const script = formData.get("scriptFile");
