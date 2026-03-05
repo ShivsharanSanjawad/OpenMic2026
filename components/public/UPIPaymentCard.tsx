@@ -70,7 +70,7 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
             </div>
           </div>
 
-          <div className="flex flex-row items-start gap-4">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
             {/* QR code — smaller on mobile, larger on sm+ */}
             <div className="relative flex-shrink-0">
               {qrUrl ? (
@@ -99,7 +99,7 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
             </div>
 
             {/* UPI info — fills remaining space */}
-            <div className="flex min-w-0 flex-1 flex-col gap-3">
+            <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-1">
               <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
                 <p className="text-xs font-medium text-amber-200">UPI ID</p>
                 <p className="truncate font-mono text-sm font-semibold text-white sm:text-base">{upiId || "Not configured"}</p>
