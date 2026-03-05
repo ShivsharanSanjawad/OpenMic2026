@@ -103,6 +103,7 @@ export function secureHeaders(nonce?: string) {
       "font-src 'self' https://fonts.gstatic.com",
       scriptSrc,
       connectSrc,
+      "frame-src https://www.youtube.com",
       "frame-ancestors 'none'",
       "form-action 'self'",
     ].join("; "),
