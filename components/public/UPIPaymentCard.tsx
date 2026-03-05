@@ -33,14 +33,14 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
           onClick={() => setLightboxOpen(false)}
         >
           <div
-            className="relative flex h-full max-h-[96dvh] w-full max-w-xs flex-col items-center justify-center gap-2 sm:max-w-sm"
+            className="relative mx-auto flex h-full max-h-[96dvh] w-full max-w-xs flex-col items-center justify-center gap-2 sm:max-w-sm"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative w-full rounded-3xl bg-white p-3 shadow-2xl sm:p-4">
               {/* Close button inside the card, top-right corner */}
               <button
                 onClick={() => setLightboxOpen(false)}
-                className="absolute -right-3 -top-3 z-10 rounded-full bg-zinc-800 p-1.5 text-white shadow-lg hover:bg-zinc-700 transition-colors"
+                className="absolute right-2 top-2 z-10 rounded-full bg-zinc-800/95 p-1.5 text-white shadow-lg hover:bg-zinc-700 transition-colors"
                 aria-label="Close"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
