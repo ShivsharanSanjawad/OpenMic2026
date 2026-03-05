@@ -51,6 +51,7 @@ export async function sendRegistrationEmail(registration: RegistrationMailData, 
         </ul>
         <p><strong>What's next:</strong> Our team will verify your payment screenshot and update your status.</p>
         <p>See you on stage!<br/>Team SPARK</p>
+        <p style="font-size:12px;color:#888">Questions? Email us at <a href="mailto:spark@spit.ac.in">spark@spit.ac.in</a></p>
       </div>
     `,
   });
@@ -81,6 +82,7 @@ export async function sendPaymentVerifiedEmail(
           <li><strong>Slot Info:</strong> ${slotInfo ?? "Will be announced soon"}</li>
         </ul>
         <p>You're all set. The stage is yours!</p>
+        <p style="font-size:12px;color:#888">Questions? Email us at <a href="mailto:spark@spit.ac.in">spark@spit.ac.in</a></p>
       </div>
     `,
   });
@@ -125,6 +127,7 @@ export async function sendPaymentRejectedEmail(
         <p><strong>Admin comment:</strong> ${adminComment ?? "No comment provided."}</p>
         ${callToAction}
         <p>Regards,<br/>Team SPARK</p>
+        <p style="font-size:12px;color:#888">For support, email <a href="mailto:spark@spit.ac.in">spark@spit.ac.in</a></p>
       </div>
     `,
   });
@@ -151,6 +154,7 @@ export async function sendReuploadReceivedEmail(registration: RegistrationMailDa
           <li><strong>Event Venue:</strong> ${eventMeta.eventVenue}</li>
         </ul>
         <p>Our team will check your updated files and notify you on the next status change.</p>
+        <p style="font-size:12px;color:#888">Questions? Email us at <a href="mailto:spark@spit.ac.in">spark@spit.ac.in</a></p>
       </div>
     `,
   });

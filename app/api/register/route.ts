@@ -9,7 +9,9 @@ import { assertAllowedOrigin, getClientIp, sanitizeJsonInput, sanitizePhone, san
 import { getPublicSettings } from "@/lib/settings";
 import { sendRegistrationEmail } from "@/lib/email";
 
-const maxScriptBytes = 1 * 1024 * 1024;
+const maxScriptBytes = 2 * 1024 * 1024;
+const maxScreenshotBytes = 1 * 1024 * 1024;
+const allowedScreenshotMimeTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const allowedScriptMimeTypes = new Set([
   "application/pdf",
   "application/msword",
@@ -61,8 +63,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Payment screenshot is required" }, { status: 400 });
   }
 
-  if (!screenshot.type.startsWith("image/")) {
-    return NextResponse.json({ error: "Only image screenshots are allowed" }, { status: 400 });
+  if (!allowedScreenshotMimeTypes.has(screenshot.type)) {
+    return NextResponse.json({ error: "Only JPG, PNG, or WebP screenshots are allowed" }, { status: 400 });
+  }
+
+  if (screenshot.size > maxScreenshotBytes) {
+    return NextResponse.json({ error: "Screenshot must be 1MB or smaller" }, { status: 400 });
   }
 
   if (script !== null && !(script instanceof File)) {
@@ -75,7 +81,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (script.size > maxScriptBytes) {
-      return NextResponse.json({ error: "Script file must be 1MB or smaller" }, { status: 400 });
+      return NextResponse.json({ error: "Script file must be 2MB or smaller" }, { status: 400 });
     }
   }
 
@@ -122,7 +128,8 @@ export async function POST(request: NextRequest) {
     } else {
       try {
         screenshotUrl = await uploadImageToCloudinary(screenshot, "spark/openmic/payments");
-      } catch {
+      } catch (cloudinaryErr) {
+        console.error("[Cloudinary] Screenshot upload failed, falling back to local:", cloudinaryErr);
         screenshotUrl = await saveImageLocally(screenshot, "spark/openmic/payments");
       }
     }
@@ -138,7 +145,8 @@ export async function POST(request: NextRequest) {
       } else {
         try {
           scriptUrl = await uploadScriptToCloudinary(script, "spark/openmic/scripts");
-        } catch {
+        } catch (cloudinaryErr) {
+          console.error("[Cloudinary] Script upload failed, falling back to local:", cloudinaryErr);
           scriptUrl = await saveScriptLocally(script, "spark/openmic/scripts");
         }
       }

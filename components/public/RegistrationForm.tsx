@@ -14,7 +14,8 @@ export function RegistrationForm({ settings }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const maxScriptBytes = 1 * 1024 * 1024;
+  const maxScriptBytes = 2 * 1024 * 1024;
+  const maxScreenshotBytes = 1 * 1024 * 1024;
 
   const showTeamField = useMemo(() => performanceType === "duo" || performanceType === "group", [performanceType]);
 
@@ -27,8 +28,8 @@ export function RegistrationForm({ settings }: Props) {
   function getMitigation(message: string) {
     const value = message.toLowerCase();
 
-    if (value.includes("script") && value.includes("1mb")) {
-      return "Compress the script or upload a shorter file under 1MB.";
+    if (value.includes("script") && (value.includes("1mb") || value.includes("2mb"))) {
+      return "Compress the script or upload a shorter file under 2MB.";
     }
 
     if (value.includes("payment screenshot") || value.includes("image")) {
@@ -218,7 +219,7 @@ export function RegistrationForm({ settings }: Props) {
               <input
                 name="paymentScreenshot"
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
                 required
                 className="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-green-600/20 file:px-4 file:py-2 file:text-green-300 file:hover:bg-green-600/30"
               />
@@ -233,7 +234,7 @@ export function RegistrationForm({ settings }: Props) {
                 </div>
                 <div>
                   <h3 className="font-semibold text-blue-300">Script Upload (Optional)</h3>
-                  <p className="text-sm text-blue-200/70">Upload your performance script (max 1MB)</p>
+                  <p className="text-sm text-blue-200/70">Upload your performance script (max 2MB)</p>
                 </div>
               </div>
               <input

@@ -7,14 +7,16 @@ cloudinary.config({
   secure: true,
 });
 
+const allowedScreenshotMimeTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
+
 export async function uploadImageToCloudinary(file: File, folder: string) {
-  if (!file.type.startsWith("image/")) {
-    throw new Error("Only image uploads are allowed");
+  if (!allowedScreenshotMimeTypes.has(file.type)) {
+    throw new Error("Only JPG, PNG, or WebP screenshots are allowed");
   }
 
-  const maxBytes = 5 * 1024 * 1024;
+  const maxBytes = 1 * 1024 * 1024;
   if (file.size > maxBytes) {
-    throw new Error("Image exceeds 5MB size limit");
+    throw new Error("Screenshot exceeds 1MB size limit");
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -43,9 +45,9 @@ export async function uploadScriptToCloudinary(file: File, folder: string) {
     throw new Error("Only PDF, DOC, DOCX, TXT, and RTF files are allowed");
   }
 
-  const maxBytes = 1 * 1024 * 1024;
+  const maxBytes = 2 * 1024 * 1024;
   if (file.size > maxBytes) {
-    throw new Error("Script exceeds 1MB size limit");
+    throw new Error("Script exceeds 2MB size limit");
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
