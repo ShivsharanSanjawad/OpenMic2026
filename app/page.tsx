@@ -53,57 +53,22 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── How to Register ── */}
+      {/* ── Performer Registration ── */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
-        <h2 className="text-3xl sm:text-4xl font-black text-amber-300">How to Register</h2>
-
-        {/* Performers-only callout */}
-        <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-500/40 bg-amber-950/20 px-5 py-4">
-          <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p className="text-sm text-amber-200">
-            <span className="font-bold text-amber-300">Performers only.</span>{" "}
-            Registration is for people who will be <span className="font-semibold text-white">performing on stage</span>. If you&apos;re coming as an audience member, <span className="font-semibold text-white">no registration is needed</span> — just show up and enjoy the show!
+        <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/30 to-orange-950/20 p-6 sm:p-8">
+          <h2 className="text-3xl sm:text-4xl font-black text-amber-300">Want to perform?</h2>
+          <p className="mt-3 max-w-3xl text-sm sm:text-base text-amber-100/90">
+            Register now to perform at SPARK OpenMic. This registration is <span className="font-bold text-amber-300">for performers only</span>.
+            Audience members do <span className="font-semibold text-white">not</span> need to register.
           </p>
-        </div>
-
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {[
-            {
-              num: "1",
-              emoji: "📝",
-              label: "Fill the Form",
-              desc: "Enter your details, performance type, and team members. Make sure your email is correct — your Registration ID will be sent there.",
-            },
-            {
-              num: "2",
-              emoji: "💸",
-              label: "Pay via UPI",
-              desc: "Scan the QR code or use the UPI ID provided to complete payment, then upload your payment screenshot.",
-            },
-            {
-              num: "3",
-              emoji: "🎤",
-              label: "Get Verified & Perform!",
-              desc: "Our team reviews your payment. You'll receive your Registration ID via email — keep it safe. You can only perform once VERIFIED.",
-            },
-          ].map(({ num, emoji, label, desc }) => (
-            <article key={num} className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6 backdrop-blur">
-              <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-sm font-black text-black flex-shrink-0">{num}</span>
-                <span className="text-2xl">{emoji}</span>
-              </div>
-              <h3 className="mt-3 text-xl font-bold text-white">{label}</h3>
-              <p className="mt-2 text-sm text-zinc-400 leading-relaxed">{desc}</p>
-            </article>
-          ))}
-        </div>
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <Link href="/register" className="inline-block rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 font-bold text-black shadow-lg shadow-amber-900/30 transition-transform hover:scale-105 active:scale-95">
-            Register Now →
-          </Link>
-          <p className="text-sm text-zinc-500">Audience members do not need to register.</p>
+          <p className="mt-2 max-w-3xl text-sm sm:text-base text-zinc-300">
+            You can perform <span className="font-semibold text-white">only after your payment is VERIFIED</span>. Your Registration ID will be sent to your email after submission.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <Link href="/register" className="inline-block rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 font-bold text-black shadow-lg shadow-amber-900/30 transition-transform hover:scale-105 active:scale-95">
+              Register Now to Perform →
+            </Link>
+          </div>
         </div>
       </section>
 

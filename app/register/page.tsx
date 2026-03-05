@@ -43,7 +43,7 @@ export default async function RegisterPage() {
             <div className="mt-4 sm:mt-6 space-y-2">
               <p className="text-xl sm:text-2xl font-semibold text-amber-300">Registration Portal</p>
               <p className="mx-auto max-w-3xl text-base sm:text-lg text-zinc-300">
-                🎤 Showcase your talent • 💰 Complete payment • 🌟 Own the stage
+                🎤 For performers only • ✅ Perform only after verification
               </p>
             </div>
           </div>
