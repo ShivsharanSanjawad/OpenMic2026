@@ -13,7 +13,7 @@ function Spinner() {
 }
 
 export function FormFieldEditor({ basePath, initialFields }: { basePath: string; initialFields: DynamicField[] }) {
-  const [fields, setFields] = useState<DynamicField[]>(initialFields);
+  const [fields, setFields] = useState<DynamicField[]>(initialFields ?? []);
   const [saving, setSaving] = useState(false);
 
   function addField() {

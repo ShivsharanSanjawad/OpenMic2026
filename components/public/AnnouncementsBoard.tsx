@@ -6,7 +6,7 @@ type Props = {
 };
 
 export function AnnouncementsBoard({ announcements }: Props) {
-  if (!announcements.length) {
+  if (!(announcements ?? []).length) {
     return (
       <div className="card text-center">
         <div className="mx-auto h-16 w-16 rounded-full bg-zinc-800/50 flex items-center justify-center mb-4">
@@ -23,7 +23,7 @@ export function AnnouncementsBoard({ announcements }: Props) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {announcements.slice(0, 6).map((a, index) => (
+        {(announcements ?? []).slice(0, 6).map((a, index) => (
           <article 
             key={a.id} 
             className={`group relative overflow-hidden rounded-xl border transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
@@ -63,7 +63,7 @@ export function AnnouncementsBoard({ announcements }: Props) {
         ))}
       </div>
       
-      {announcements.length > 6 && (
+      {(announcements ?? []).length > 6 && (
         <div className="text-center">
           <Link 
             href="/announcements" 

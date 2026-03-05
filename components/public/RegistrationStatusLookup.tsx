@@ -48,7 +48,7 @@ export function RegistrationStatusLookup() {
   }
 
   function canEdit(field: string) {
-    return result?.allowedCorrectionFields.includes(field) ?? false;
+    return (result?.allowedCorrectionFields ?? []).includes(field) ?? false;
   }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -198,7 +198,7 @@ export function RegistrationStatusLookup() {
               <div><span className="text-zinc-400">Status:</span> <span className={`font-medium ${statusColor}`}>{result.paymentStatus}</span></div>
               <div><span className="text-zinc-400">Admin Comment:</span> <span className="text-zinc-200">{result.adminComment ?? "No comment"}</span></div>
               {result.canReupload && (
-                <div className="md:col-span-2"><span className="text-zinc-400">Editable Fields:</span> <span className="text-amber-300">{result.allowedCorrectionFields.join(", ")}</span></div>
+                <div className="md:col-span-2"><span className="text-zinc-400">Editable Fields:</span> <span className="text-amber-300">{(result.allowedCorrectionFields ?? []).join(", ")}</span></div>
               )}
               <div className="md:col-span-2"><span className="text-zinc-400">Last Updated:</span> <span className="text-zinc-200">{formatDate(result.updatedAt)} UTC</span></div>
             </div>
@@ -312,11 +312,11 @@ export function RegistrationStatusLookup() {
             </div>
           )}
 
-          {result.commentHistory.length > 0 && (
+          {(result.commentHistory ?? []).length > 0 && (
             <div className="card bg-zinc-900/70">
               <h3 className="text-lg font-semibold text-zinc-200 mb-4">Comment History</h3>
               <div className="space-y-3">
-                {result.commentHistory
+                {(result.commentHistory ?? [])
                   .slice()
                   .reverse()
                   .map((item, index) => (
@@ -327,8 +327,8 @@ export function RegistrationStatusLookup() {
                         <span>Reupload: {item.requiresReupload ? "Yes" : "No"}</span>
                         <span>{formatDate(item.createdAt)} UTC</span>
                       </div>
-                      {item.requiresReupload && item.allowedCorrectionFields.length > 0 && (
-                        <p className="text-xs text-amber-400 mt-1">Editable: {item.allowedCorrectionFields.join(", ")}</p>
+                      {item.requiresReupload && (item.allowedCorrectionFields ?? []).length > 0 && (
+                        <p className="text-xs text-amber-400 mt-1">Editable: {(item.allowedCorrectionFields ?? []).join(", ")}</p>
                       )}
                     </div>
                   ))}
