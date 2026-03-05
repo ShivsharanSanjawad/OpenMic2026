@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Registration {
+  id                      String             @id @default(cuid())
+  name                    String
+  email                   String
+  phone                   String
+  college                 String?
+  performanceType         PerformanceType
+  performanceTitle        String?
+  duration                String?
+  teamMembers             Json?
+  paymentScreenshot       String
+  extraFields             Json?
+  userId                  String?
+  emailSent               Boolean            @default(false)
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  paymentStatus           RegistrationStatus @default(PENDING_REVIEW)
+  scriptFile              String?
+  adminComment            String?
+  emailError              String?
+  emailLastAttempt        DateTime?
+  requiresReupload        Boolean            @default(false)
+  allowedCorrectionFields Json?
+  adminComments           AdminComment[]
+  user                    User?              @relation(fields: [userId], references: [id])
+
+  @@index([email])
+  @@index([createdAt])
+  @@index([paymentStatus])
+}
+
+model AdminComment {
+  id               String             @id @default(cuid())
+  registrationId   String
+  message          String
+  status           RegistrationStatus
+  requiresReupload Boolean            @default(false)
+  allowedFields    Json?
+  createdAt        DateTime           @default(now())
+  registration     Registration       @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@index([registrationId])
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id          String           @id @default(cuid())
+  title       String
+  body        String
+  type        AnnouncementType @default(GENERAL)
+  isPinned    Boolean          @default(false)
+  isPublished Boolean          @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String?
+  phone         String?
+  passwordHash  String?
+  emailVerified Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  registrations Registration[]
+}
+
+enum PerformanceType {
+  solo
+  duo
+  group
+}
+
+enum RegistrationStatus {
+  PENDING_REVIEW
+  PENDING_CORRECTION
+  VERIFIED
+  REJECTED
+}
+
+enum AnnouncementType {
+  GENERAL
+  SHORTLIST
+  SCHEDULE
+  RESULT
+  IMPORTANT
+}

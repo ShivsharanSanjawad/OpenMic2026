@@ -1,0 +1,75 @@
+import { NextRequest, NextResponse } from "next/server";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { saveImageLocally } from "@/lib/local-upload";
+import { getAdminFromCookie } from "@/lib/auth";
+import { getPublicSettings, setSetting } from "@/lib/settings";
+import { assertAllowedOrigin, sanitizeText } from "@/lib/security";
+
+function notFound() {
+  return NextResponse.json({ error: "Not found" }, { status: 404 });
+}
+
+async function guard(adminPath: string) {
+  if (adminPath !== process.env.ADMIN_BASE_PATH) return false;
+  const admin = await getAdminFromCookie();
+  return Boolean(admin);
+}
+
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ adminPath: string }> },
+) {
+  const { adminPath } = await params;
+  if (!(await guard(adminPath))) return notFound();
+
+  const settings = await getPublicSettings();
+  return NextResponse.json({ settings });
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ adminPath: string }> },
+) {
+  const isDev = process.env.NODE_ENV !== "production";
+  const disableCloudinary = process.env.DISABLE_CLOUDINARY === "true";
+
+  const { adminPath } = await params;
+  if (!(await guard(adminPath))) return notFound();
+  if (!assertAllowedOrigin(request)) {
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  }
+
+  const formData = await request.formData();
+
+  const upiId = sanitizeText(formData.get("upi_id"), 120);
+  const paymentAmount = sanitizeText(formData.get("payment_amount"), 20);
+  const eventDate = sanitizeText(formData.get("event_date"), 120);
+  const eventVenue = sanitizeText(formData.get("event_venue"), 180);
+  const formFieldsRaw = sanitizeText(formData.get("form_fields"), 4000);
+  const qrImage = formData.get("qrImage");
+
+  if (upiId) await setSetting("upi_id", upiId);
+  if (paymentAmount) await setSetting("payment_amount", paymentAmount);
+  if (eventDate) await setSetting("event_date", eventDate);
+  if (eventVenue) await setSetting("event_venue", eventVenue);
+  if (formFieldsRaw) await setSetting("form_fields", formFieldsRaw);
+
+  if (qrImage instanceof File && qrImage.size > 0) {
+    if (!qrImage.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Only image files are allowed" }, { status: 400 });
+    }
+    try {
+      const qrUrl = disableCloudinary
+        ? await saveImageLocally(qrImage, "spark/openmic/qr")
+        : await uploadImageToCloudinary(qrImage, "spark/openmic/qr").catch(async () =>
+            saveImageLocally(qrImage, "spark/openmic/qr"),
+          );
+      await setSetting("upi_qr_url", qrUrl);
+    } catch {
+      return NextResponse.json({ error: "Failed to upload QR image" }, { status: 400 });
+    }
+  }
+
+  const settings = await getPublicSettings();
+  return NextResponse.json({ success: true, settings });
+}
