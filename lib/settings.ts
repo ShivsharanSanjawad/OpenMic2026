@@ -45,5 +45,8 @@ export async function getPublicSettings(): Promise<PublicSettings> {
 
   const entries = await Promise.all(keys.map(async (key) => [key, await getSetting(key)] as const));
 
-  return Object.fromEntries(entries) as PublicSettings;
+  const result = Object.fromEntries(entries) as PublicSettings;
+  // Ensure form_fields is always a proper array, never undefined
+  if (!Array.isArray(result.form_fields)) result.form_fields = [];
+  return result;
 }

@@ -292,7 +292,7 @@ export function RegistrationForm({ settings }: Props) {
             </div>
           )}
 
-          {settings.form_fields.map((field) => (
+          {(settings.form_fields ?? []).map((field) => (
             <DynamicFieldInput key={field.id} field={field} />
           ))}
 
