@@ -20,21 +20,6 @@ export default async function Home() {
     <main>
       <HeroSection eventDate={settings.event_date} eventVenue={settings.event_venue} />
 
-      {/* ── Teaser Video ── */}
-      <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <div className="overflow-hidden rounded-3xl border border-amber-400/20 shadow-2xl shadow-amber-900/20">
-          <div className="relative aspect-[9/16] w-full max-w-sm mx-auto bg-black sm:aspect-video sm:max-w-none">
-            <iframe
-              src="https://www.youtube.com/embed/gKMeOf2Xkpk?autoplay=1&mute=1&loop=1&playlist=gKMeOf2Xkpk&controls=1&rel=0&modestbranding=1"
-              title="SPARK OpenMic teaser"
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* ── About SPARK ── */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <p className="text-xs font-semibold uppercase tracking-widest text-amber-400">Who we are</p>
