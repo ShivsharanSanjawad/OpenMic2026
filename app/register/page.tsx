@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { RegistrationForm } from "@/components/public/RegistrationForm";
 import { RegistrationStatusLookup } from "@/components/public/RegistrationStatusLookup";
 import { getPublicSettings } from "@/lib/settings";
@@ -84,9 +85,9 @@ export default async function RegisterPage() {
               <p className="mt-2 text-zinc-400">
                 New registrations are not being accepted at this time. Please check back later or follow our announcements for updates.
               </p>
-              <a href="/announcements" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-500/20 border border-amber-500/30 px-5 py-2.5 text-sm font-semibold text-amber-300 hover:bg-amber-500/30 transition-colors">
+              <Link href="/announcements" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-500/20 border border-amber-500/30 px-5 py-2.5 text-sm font-semibold text-amber-300 hover:bg-amber-500/30 transition-colors">
                 View Announcements
-              </a>
+              </Link>
             </div>
           )}
         </div>
