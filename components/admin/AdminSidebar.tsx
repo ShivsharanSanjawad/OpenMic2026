@@ -57,6 +57,7 @@ export function AdminSidebar({ basePath }: { basePath: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   async function handleLogout() {
     if (loggingOut) return;
@@ -68,67 +69,98 @@ export function AdminSidebar({ basePath }: { basePath: string }) {
     }
   }
 
+  const navLinks = NAV_LINKS.map((link) => {
+    const href = `/${basePath}/${link.segment}`;
+    const isActive = pathname === href || pathname.startsWith(`${href}/`);
+    return (
+      <Link
+        key={href}
+        href={href}
+        onClick={() => setMobileOpen(false)}
+        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+          isActive
+            ? "bg-gradient-to-r from-amber-500/25 to-orange-500/15 text-amber-300 border border-amber-500/40 shadow-sm"
+            : "text-zinc-400 hover:bg-zinc-800/70 hover:text-zinc-200 border border-transparent"
+        }`}
+      >
+        <span className={isActive ? "text-amber-400" : "text-zinc-500"}>{link.icon}</span>
+        {link.label}
+        {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />}
+      </Link>
+    );
+  });
+
+  const logoutButton = (
+    <button
+      onClick={handleLogout}
+      disabled={loggingOut}
+      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-500/10 hover:text-red-300 disabled:opacity-60 border border-transparent hover:border-red-500/20"
+    >
+      {loggingOut ? (
+        <>
+          <Spinner />
+          Logging out…
+        </>
+      ) : (
+        <>
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Log Out
+        </>
+      )}
+    </button>
+  );
+
   return (
-    <aside className="flex flex-col rounded-2xl border border-amber-500/30 bg-gradient-to-b from-zinc-900 to-zinc-950 overflow-hidden self-start sticky top-6">
+    <aside className="flex flex-col rounded-2xl border border-amber-500/30 bg-gradient-to-b from-zinc-900 to-zinc-950 overflow-hidden md:self-start md:sticky md:top-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 py-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/30">
-            <svg className="h-4 w-4 text-amber-200" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-            </svg>
+      <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/30">
+              <svg className="h-4 w-4 text-amber-200" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-black tracking-widest text-white uppercase">SPARK</p>
+              <p className="text-[10px] font-medium text-amber-100/80">Admin Panel</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-black tracking-widest text-white uppercase">SPARK</p>
-            <p className="text-[10px] font-medium text-amber-100/80">Admin Panel</p>
-          </div>
+
+          {/* Mobile hamburger toggle */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/20 text-amber-100 transition-colors hover:bg-black/40 md:hidden"
+            aria-label="Toggle navigation"
+          >
+            {mobileOpen ? (
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 p-3 grid gap-1">
-        {NAV_LINKS.map((link) => {
-          const href = `/${basePath}/${link.segment}`;
-          const isActive = pathname === href || pathname.startsWith(`${href}/`);
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
-                isActive
-                  ? "bg-gradient-to-r from-amber-500/25 to-orange-500/15 text-amber-300 border border-amber-500/40 shadow-sm"
-                  : "text-zinc-400 hover:bg-zinc-800/70 hover:text-zinc-200 border border-transparent"
-              }`}
-            >
-              <span className={isActive ? "text-amber-400" : "text-zinc-500"}>{link.icon}</span>
-              {link.label}
-              {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />}
-            </Link>
-          );
-        })}
-      </nav>
+      {/* Collapsible body — always visible on md+, toggled on mobile */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out md:!grid-rows-[1fr] ${
+          mobileOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          {/* Nav */}
+          <nav className="p-3 grid gap-1">{navLinks}</nav>
 
-      {/* Footer: logout */}
-      <div className="border-t border-zinc-800/80 p-3">
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-500/10 hover:text-red-300 disabled:opacity-60 border border-transparent hover:border-red-500/20"
-        >
-          {loggingOut ? (
-            <>
-              <Spinner />
-              Logging out…
-            </>
-          ) : (
-            <>
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Log Out
-            </>
-          )}
-        </button>
+          {/* Footer: logout */}
+          <div className="border-t border-zinc-800/80 p-3">{logoutButton}</div>
+        </div>
       </div>
     </aside>
   );
