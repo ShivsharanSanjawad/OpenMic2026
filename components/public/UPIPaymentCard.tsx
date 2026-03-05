@@ -29,29 +29,35 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
       {/* Lightbox overlay */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-50 flex h-dvh items-center justify-center overflow-hidden bg-black/85 p-3 backdrop-blur-sm sm:p-6"
+          style={{ position: "fixed", inset: 0, zIndex: 9999, backgroundColor: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
           onClick={() => setLightboxOpen(false)}
         >
+          {/* Close button — floating top-right of screen, always visible */}
+          <button
+            onClick={() => setLightboxOpen(false)}
+            style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10000, background: "#27272a", border: "none", borderRadius: "9999px", padding: "8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+            aria-label="Close"
+          >
+            <svg style={{ width: "20px", height: "20px", color: "white" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* QR card — centered, fits screen */}
           <div
-            className="relative mx-auto flex h-full max-h-[96dvh] w-full max-w-xs flex-col items-center justify-center gap-2 sm:max-w-sm"
+            style={{ background: "white", borderRadius: "20px", padding: "12px", maxWidth: "min(85vw, 320px)", width: "100%" }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative w-full rounded-3xl bg-white p-3 shadow-2xl sm:p-4">
-              {/* Close button inside the card, top-right corner */}
-              <button
-                onClick={() => setLightboxOpen(false)}
-                className="absolute right-2 top-2 z-10 rounded-full bg-zinc-800/95 p-1.5 text-white shadow-lg hover:bg-zinc-700 transition-colors"
-                aria-label="Close"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrUrl} alt="UPI QR Code" className="mx-auto aspect-square max-h-[78dvh] w-full rounded-xl object-contain" />
-            </div>
-            <p className="text-center text-xs text-white/60 sm:text-sm">Tap outside or press Esc to close</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrUrl}
+              alt="UPI QR Code"
+              style={{ width: "100%", height: "auto", maxHeight: "70vh", objectFit: "contain", borderRadius: "12px", display: "block" }}
+            />
           </div>
+          <p style={{ position: "absolute", bottom: "16px", left: 0, right: 0, textAlign: "center", fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>
+            Tap outside or press Esc to close
+          </p>
         </div>
       )}
 
