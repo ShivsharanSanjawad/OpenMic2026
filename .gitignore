@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# local uploads (served via Cloudinary in production)
+/public/uploads/
+/public/*.mp4
+/public/*.mov
+/public/*.webm

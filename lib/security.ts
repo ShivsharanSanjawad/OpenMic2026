@@ -98,6 +98,7 @@ export function secureHeaders(nonce?: string) {
     "Content-Security-Policy": [
       "default-src 'self'",
       "img-src 'self' data: https://res.cloudinary.com",
+      "media-src 'self' https://res.cloudinary.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       scriptSrc,

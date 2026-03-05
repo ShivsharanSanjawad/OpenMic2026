@@ -21,17 +21,20 @@ export default async function Home() {
       <HeroSection eventDate={settings.event_date} eventVenue={settings.event_venue} />
 
       {/* ── Teaser Video ── */}
-      <section className="mx-auto max-w-4xl px-6 py-10">
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <div className="overflow-hidden rounded-3xl border border-amber-400/20 shadow-2xl shadow-amber-900/20">
-          <video
-            src="/spark-openmic-teaser.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full object-cover"
-            aria-label="SPARK OpenMic teaser video"
-          />
+          <div className="relative aspect-video w-full bg-black">
+            <video
+              src="https://res.cloudinary.com/dj0kep34k/video/upload/q_auto,f_auto/spark/openmic/teaser/spark-openmic-10-teaser.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              className="absolute inset-0 h-full w-full object-contain"
+              aria-label="SPARK OpenMic teaser video"
+            />
+          </div>
         </div>
       </section>
 
