@@ -42,7 +42,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   }
 
-  const isDev = process.env.NODE_ENV !== "production";
   const disableCloudinary = process.env.DISABLE_CLOUDINARY === "true";
   const disableGmail = process.env.DISABLE_GMAIL === "true";
 

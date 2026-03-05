@@ -73,10 +73,22 @@ export function RegistrationForm({ settings }: Props) {
       formData.delete("teamMembers");
     }
 
-    const scriptFile = formData.get("scriptFile");
+    const screenshotFile = formData.get("paymentScreenshot");
+    if (screenshotFile instanceof File && screenshotFile.size > maxScreenshotBytes) {
+      setError("Payment screenshot must be 1MB or smaller.");
+      setLoading(false);
+      return;
+    }
+    const allowedScreenshotTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
+    if (screenshotFile instanceof File && screenshotFile.size > 0 && !allowedScreenshotTypes.has(screenshotFile.type)) {
+      setError("Payment screenshot must be a JPG, PNG, or WebP image.");
+      setLoading(false);
+      return;
+    }
 
+    const scriptFile = formData.get("scriptFile");
     if (scriptFile instanceof File && scriptFile.size > maxScriptBytes) {
-      setError("Script file must be 1MB or smaller.");
+      setError("Script file must be 2MB or smaller.");
       setLoading(false);
       return;
     }

@@ -30,7 +30,6 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ adminPath: string }> },
 ) {
-  const isDev = process.env.NODE_ENV !== "production";
   const disableCloudinary = process.env.DISABLE_CLOUDINARY === "true";
 
   const { adminPath } = await params;
