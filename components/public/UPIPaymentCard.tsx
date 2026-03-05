@@ -15,8 +15,13 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
   useEffect(() => {
     if (!lightboxOpen) return;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxOpen(false); };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handler);
+    };
   }, [lightboxOpen]);
 
   return (
@@ -24,14 +29,14 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
       {/* Lightbox overlay */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6"
+          className="fixed inset-0 z-50 flex h-dvh items-center justify-center overflow-hidden bg-black/85 p-3 backdrop-blur-sm sm:p-6"
           onClick={() => setLightboxOpen(false)}
         >
           <div
-            className="relative flex w-full max-w-xs flex-col items-center gap-3 sm:max-w-sm"
+            className="relative flex h-full max-h-[96dvh] w-full max-w-xs flex-col items-center justify-center gap-2 sm:max-w-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative w-full rounded-3xl bg-white p-4 shadow-2xl">
+            <div className="relative w-full rounded-3xl bg-white p-3 shadow-2xl sm:p-4">
               {/* Close button inside the card, top-right corner */}
               <button
                 onClick={() => setLightboxOpen(false)}
@@ -43,9 +48,9 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
                 </svg>
               </button>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrUrl} alt="UPI QR Code" className="aspect-square w-full rounded-xl object-contain" />
+              <img src={qrUrl} alt="UPI QR Code" className="mx-auto aspect-square max-h-[78dvh] w-full rounded-xl object-contain" />
             </div>
-            <p className="text-sm text-white/60">Tap outside or press Esc to close</p>
+            <p className="text-center text-xs text-white/60 sm:text-sm">Tap outside or press Esc to close</p>
           </div>
         </div>
       )}
