@@ -13,7 +13,8 @@ export function RegistrationForm({ settings }: Props) {
   const [teamMembers, setTeamMembers] = useState<string[]>([""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [submittedId, setSubmittedId] = useState("");
+  const [copied, setCopied] = useState(false);
   const maxScriptBytes = 2 * 1024 * 1024;
   const maxScreenshotBytes = 1 * 1024 * 1024;
 
@@ -55,7 +56,6 @@ export function RegistrationForm({ settings }: Props) {
     event.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess("");
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -113,11 +113,7 @@ export function RegistrationForm({ settings }: Props) {
       } else {
         form.reset();
         setTeamMembers([""]);
-        setSuccess(
-          `🎉 Registration successful! Your registration ID is: ${data.registrationId}. ` +
-          `A confirmation email has been sent to your email address — please check your inbox (and spam/junk folder). ` +
-          `Save your ID to check your payment verification status later.`
-        );
+        setSubmittedId(data.registrationId);
       }
     } catch {
       const message = "Unable to submit registration. Please try again.";
@@ -127,10 +123,87 @@ export function RegistrationForm({ settings }: Props) {
     }
   }
 
+  async function copyId() {
+    await navigator.clipboard.writeText(submittedId).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  // ── Success card (replaces form after submission) ─────────────────────────
+  if (submittedId) {
+    return (
+      <div className="relative">
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl"></div>
+        <div className="card relative text-center space-y-6">
+          {/* Big checkmark */}
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-green-500/30 to-emerald-500/20 border border-green-500/40">
+            <svg className="h-10 w-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+
+          <div>
+            <h2 className="text-3xl font-black text-green-300">You&apos;re Registered! 🎉</h2>
+            <p className="mt-2 text-zinc-400">Your registration has been received and is pending payment verification.</p>
+          </div>
+
+          {/* Prominent ID card */}
+          <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-br from-amber-950/40 to-orange-950/30 p-6">
+            <p className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">Your Registration ID</p>
+            <p className="text-2xl font-black tracking-wider text-white break-all">{submittedId}</p>
+            <button
+              type="button"
+              onClick={copyId}
+              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500/20 border border-amber-500/30 px-4 py-2 text-sm font-medium text-amber-300 hover:bg-amber-500/30 transition-colors"
+            >
+              {copied ? (
+                <><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copied!</>
+              ) : (
+                <><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>Copy ID</>
+              )}
+            </button>
+          </div>
+
+          {/* Info boxes */}
+          <div className="grid gap-3 text-left sm:grid-cols-3">
+            <div className="rounded-xl border border-sky-500/30 bg-sky-950/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-sky-400 mb-1">📧 Check Your Email</p>
+              <p className="text-sm text-zinc-300">A confirmation email with your Registration ID has been sent. Check your inbox <span className="font-semibold text-white">and spam/junk folder</span>.</p>
+            </div>
+            <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-amber-400 mb-1">🔖 Save Your ID</p>
+              <p className="text-sm text-zinc-300">Keep your Registration ID safe. You&apos;ll need it to <span className="font-semibold text-white">check your status</span> and receive further updates.</p>
+            </div>
+            <div className="rounded-xl border border-orange-500/30 bg-orange-950/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-orange-400 mb-1">⏳ Verification Pending</p>
+              <p className="text-sm text-zinc-300">You can <span className="font-semibold text-white">only perform once VERIFIED</span>. Our team will review your payment screenshot shortly.</p>
+            </div>
+          </div>
+
+          {/* Next step */}
+          <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 text-sm text-zinc-400">
+            Use the <span className="font-semibold text-amber-300">Check Status</span> section below to track your verification status anytime using your Registration ID.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 blur-3xl"></div>
       <div className="card relative">
+        {/* Performers-only notice */}
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/40 bg-amber-950/20 p-4">
+          <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="text-sm">
+            <p className="font-bold text-amber-300">Performers Only</p>
+            <p className="mt-0.5 text-amber-200/80">This registration is exclusively for people who will be <span className="font-semibold text-white">performing on stage</span>. If you&apos;re attending as an audience member, you do <span className="font-semibold text-white">not</span> need to register.</p>
+          </div>
+        </div>
+
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-white">Registration Form</h2>
           <p className="mt-2 text-zinc-400">Fill in your details to secure your spot</p>
@@ -143,7 +216,11 @@ export function RegistrationForm({ settings }: Props) {
 
           <div className="grid gap-6 md:grid-cols-2">
             <Input name="name" label="Full Name" required />
-            <Input name="email" label="Email Address" type="email" required />
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-white">Email Address *</label>
+              <input name="email" type="email" required className="input-field" />
+              <p className="text-xs text-amber-300/80">⚠️ Double-check this. Your Registration ID and all updates will be sent to this email.</p>
+            </div>
             <Input name="phone" label="Phone Number" required maxLength={10} />
             <Input name="college" label="College / Institution" />
 
@@ -270,16 +347,6 @@ export function RegistrationForm({ settings }: Props) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-sm text-red-300">{error}</p>
-                </div>
-              </div>
-            )}
-            {success && (
-              <div className="rounded-xl border border-green-500/30 bg-green-950/30 p-4">
-                <div className="flex items-start gap-3">
-                  <svg className="mt-0.5 h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="text-sm text-green-300">{success}</p>
                 </div>
               </div>
             )}
