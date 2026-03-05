@@ -40,6 +40,15 @@ const allowedScriptMimeTypes = new Set([
   "text/rtf",
 ]);
 
+const mimeToExt: Record<string, string> = {
+  "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+  "text/plain": "txt",
+  "application/rtf": "rtf",
+  "text/rtf": "rtf",
+};
+
 export async function uploadScriptToCloudinary(file: File, folder: string) {
   if (!allowedScriptMimeTypes.has(file.type)) {
     throw new Error("Only PDF, DOC, DOCX, TXT, and RTF files are allowed");
@@ -50,13 +59,20 @@ export async function uploadScriptToCloudinary(file: File, folder: string) {
     throw new Error("Script exceeds 2MB size limit");
   }
 
+  const ext = mimeToExt[file.type] ?? "pdf";
+  // Strip any existing extension from the original name then re-append correct one
+  const baseName = (file.name ?? "script").replace(/\.[^/.]+$/, "");
+  const publicId = `${folder}/${baseName}_${Date.now()}.${ext}`;
+
   const buffer = Buffer.from(await file.arrayBuffer());
   const dataUri = `data:${file.type};base64,${buffer.toString("base64")}`;
 
   const result = await cloudinary.uploader.upload(dataUri, {
-    folder,
+    public_id: publicId,
     resource_type: "raw",
-    allowed_formats: ["pdf", "doc", "docx", "txt", "rtf"],
+    use_filename: false,
+    unique_filename: false,
+    overwrite: false,
   });
 
   return result.secure_url;
