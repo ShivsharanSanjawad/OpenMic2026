@@ -72,10 +72,18 @@ export function getClientIp(request: NextRequest) {
   return "unknown";
 }
 
-export function secureHeaders() {
+export function secureHeaders(nonce?: string) {
   const isProd = process.env.NODE_ENV === "production";
 
-  const scriptSrc = isProd ? "script-src 'self'" : "script-src 'self' 'unsafe-inline' 'unsafe-eval'";
+  // Use nonce + strict-dynamic in production for tight CSP without unsafe-inline.
+  // 'strict-dynamic' lets scripts loaded by a nonced script load further scripts,
+  // which is required for Next.js chunk loading.
+  const scriptSrc = nonce
+    ? `script-src 'nonce-${nonce}' 'strict-dynamic'`
+    : isProd
+      ? "script-src 'self'"
+      : "script-src 'self' 'unsafe-inline' 'unsafe-eval'";
+
   const connectSrc = isProd
     ? "connect-src 'self' https://api.cloudinary.com"
     : "connect-src 'self' https://api.cloudinary.com ws://localhost:* http://localhost:*";
