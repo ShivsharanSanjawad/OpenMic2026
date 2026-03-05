@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   qrUrl: string;
@@ -10,56 +11,81 @@ type Props = {
 
 export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Close on Escape key
+  useEffect(() => { setMounted(true); }, []);
+
+  // Close on Escape + lock scroll
   useEffect(() => {
     if (!lightboxOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxOpen(false); };
-    const previousOverflow = document.body.style.overflow;
+    const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxOpen(false); };
     window.addEventListener("keydown", handler);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = prev;
       window.removeEventListener("keydown", handler);
     };
   }, [lightboxOpen]);
 
+  const lightbox = lightboxOpen && mounted ? createPortal(
+    <div
+      onClick={() => setLightboxOpen(false)}
+      style={{
+        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+        width: "100vw", height: "100vh",
+        zIndex: 99999,
+        backgroundColor: "rgba(0,0,0,0.93)",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        padding: "20px",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Close button — screen-level top-right */}
+      <button
+        onClick={() => setLightboxOpen(false)}
+        style={{
+          position: "fixed", top: "14px", right: "14px",
+          zIndex: 100000,
+          background: "#3f3f46", border: "2px solid rgba(255,255,255,0.2)",
+          borderRadius: "50%", width: "36px", height: "36px",
+          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+          color: "white",
+        }}
+        aria-label="Close"
+      >
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      {/* QR image card */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "white", borderRadius: "16px", padding: "12px",
+          width: "min(85vw, 300px)",
+          boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={qrUrl}
+          alt="UPI QR Code"
+          style={{ display: "block", width: "100%", height: "auto", maxHeight: "65vh", objectFit: "contain", borderRadius: "8px" }}
+        />
+      </div>
+      <p style={{ marginTop: "12px", fontSize: "12px", color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+        Tap outside or press Esc to close
+      </p>
+    </div>,
+    document.body
+  ) : null;
+
   return (
     <>
-      {/* Lightbox overlay */}
-      {lightboxOpen && (
-        <div
-          style={{ position: "fixed", inset: 0, zIndex: 9999, backgroundColor: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
-          onClick={() => setLightboxOpen(false)}
-        >
-          {/* Close button — floating top-right of screen, always visible */}
-          <button
-            onClick={() => setLightboxOpen(false)}
-            style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10000, background: "#27272a", border: "none", borderRadius: "9999px", padding: "8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-            aria-label="Close"
-          >
-            <svg style={{ width: "20px", height: "20px", color: "white" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          {/* QR card — centered, fits screen */}
-          <div
-            style={{ background: "white", borderRadius: "20px", padding: "12px", maxWidth: "min(85vw, 320px)", width: "100%" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={qrUrl}
-              alt="UPI QR Code"
-              style={{ width: "100%", height: "auto", maxHeight: "70vh", objectFit: "contain", borderRadius: "12px", display: "block" }}
-            />
-          </div>
-          <p style={{ position: "absolute", bottom: "16px", left: 0, right: 0, textAlign: "center", fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>
-            Tap outside or press Esc to close
-          </p>
-        </div>
-      )}
+      {lightbox}
 
       <div className="relative overflow-hidden rounded-2xl border border-amber-400/30 bg-gradient-to-br from-amber-950/40 to-orange-950/40 p-6 shadow-2xl backdrop-blur-sm">
         <div className="absolute inset-0 bg-gradient-to-r from-amber-600/10 to-orange-600/10"></div>
