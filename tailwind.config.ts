@@ -10,6 +10,7 @@ const config: Config = {
       fontFamily: {
         heading: ["var(--font-heading)", "Bebas Neue", "Arial Black", "sans-serif"],
         body: ["var(--font-body)", "DM Sans", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "Space Mono", "Courier New", "monospace"],
       },
       colors: {
         amber: {

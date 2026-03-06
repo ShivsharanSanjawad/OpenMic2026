@@ -79,14 +79,14 @@ export function secureHeaders(nonce?: string) {
   // 'strict-dynamic' lets scripts loaded by a nonced script load further scripts,
   // which is required for Next.js chunk loading.
   const scriptSrc = nonce
-    ? `script-src 'nonce-${nonce}' 'strict-dynamic'`
+    ? `script-src 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval'`
     : isProd
-      ? "script-src 'self'"
+      ? "script-src 'self' 'unsafe-eval'"
       : "script-src 'self' 'unsafe-inline' 'unsafe-eval'";
 
   const connectSrc = isProd
-    ? "connect-src 'self' https://api.cloudinary.com"
-    : "connect-src 'self' https://api.cloudinary.com ws://localhost:* http://localhost:*";
+    ? "connect-src 'self' blob: https://api.cloudinary.com"
+    : "connect-src 'self' blob: https://api.cloudinary.com ws://localhost:* http://localhost:*";
 
   return {
     "X-Frame-Options": "DENY",
@@ -97,13 +97,14 @@ export function secureHeaders(nonce?: string) {
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
     "Content-Security-Policy": [
       "default-src 'self'",
-      "img-src 'self' data: https://res.cloudinary.com",
+      "img-src 'self' data: blob: https://res.cloudinary.com",
       "media-src 'self' https://res.cloudinary.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       scriptSrc,
       connectSrc,
       "frame-src https://www.youtube.com",
+      "worker-src 'self' blob:",
       "frame-ancestors 'none'",
       "form-action 'self'",
     ].join("; "),

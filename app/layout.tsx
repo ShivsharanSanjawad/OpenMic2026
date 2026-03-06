@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, DM_Sans } from "next/font/google";
+import { Bebas_Neue, DM_Sans, Space_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import "./globals.css";
@@ -12,6 +12,12 @@ const headingFont = Bebas_Neue({
 
 const bodyFont = DM_Sans({
   variable: "--font-body",
+  subsets: ["latin"],
+});
+
+const monoFont = Space_Mono({
+  weight: ["400", "700"],
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -34,7 +40,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${headingFont.variable} ${bodyFont.variable} antialiased`} {...(nonce ? { "data-nonce": nonce } : {})}>
+      <body className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable} antialiased`} {...(nonce ? { "data-nonce": nonce } : {})}>
         <NavigationProgress />
         {children}
       </body>
