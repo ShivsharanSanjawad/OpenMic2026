@@ -54,7 +54,7 @@ export default async function Home() {
           </div>
 
           {/* ── Text column ── */}
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400/70 sm:text-[11px] sm:tracking-[0.35em]">
               Feel the energy
             </p>
@@ -70,7 +70,7 @@ export default async function Home() {
             </p>
 
             {/* Tags */}
-            <div className="mt-6 flex flex-wrap justify-center gap-2 sm:mt-8">
+            <div className="mt-6 flex flex-wrap justify-center gap-2 sm:mt-8 lg:justify-start">
               {["Poetry", "Music", "Stand-up", "Spoken Word", "Storytelling"].map(
                 (tag) => (
                   <span
@@ -83,9 +83,16 @@ export default async function Home() {
               )}
             </div>
 
+            {/* Event date */}
+            {settings.event_date && (
+              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:mt-8 sm:text-xs">
+                Save the Date — <span className="text-amber-400/80">{settings.event_date}</span>
+              </p>
+            )}
+
             <Link
               href="/register"
-              className="mt-8 inline-block rounded-full bg-amber-400 px-8 py-3 font-mono text-[11px] uppercase tracking-widest text-slate-900 shadow-lg shadow-amber-400/20 transition-all duration-300 hover:scale-105 hover:bg-amber-300 active:scale-95 sm:mt-10 sm:px-10 sm:py-3.5 sm:text-sm"
+              className="mt-4 inline-block rounded-full bg-amber-400 px-8 py-3 font-mono text-[11px] uppercase tracking-widest text-slate-900 shadow-lg shadow-amber-400/20 transition-all duration-300 hover:scale-105 hover:bg-amber-300 active:scale-95 sm:mt-5 sm:px-10 sm:py-3.5 sm:text-sm"
             >
               Register to Perform →
             </Link>
