@@ -132,86 +132,82 @@ export function RegistrationForm({ settings }: Props) {
   // ── Success card (replaces form after submission) ─────────────────────────
   if (submittedId) {
     return (
-      <div className="relative">
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl"></div>
-        <div className="card relative text-center space-y-6">
-          {/* Big checkmark */}
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-green-500/30 to-emerald-500/20 border border-green-500/40">
-            <svg className="h-10 w-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-6 text-center space-y-6 sm:p-8">
+        {/* Checkmark */}
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/[0.08]">
+          <svg className="h-8 w-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
 
-          <div>
-            <h2 className="text-3xl font-black text-green-300">You&apos;re Registered! 🎉</h2>
-            <p className="mt-2 text-zinc-400">Your registration has been received and is pending payment verification.</p>
-          </div>
+        <div>
+          <h2 className="font-heading text-3xl tracking-wide text-white">You&apos;re Registered!</h2>
+          <p className="mt-2 text-sm text-zinc-400">Your registration has been received and is pending payment verification.</p>
+        </div>
 
-          {/* Prominent ID card */}
-          <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-br from-amber-950/40 to-orange-950/30 p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">Your Registration ID</p>
-            <p className="text-2xl font-black tracking-wider text-white break-all">{submittedId}</p>
-            <button
-              type="button"
-              onClick={copyId}
-              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500/20 border border-amber-500/30 px-4 py-2 text-sm font-medium text-amber-300 hover:bg-amber-500/30 transition-colors"
-            >
-              {copied ? (
-                <><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copied!</>
-              ) : (
-                <><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>Copy ID</>
-              )}
-            </button>
-          </div>
+        {/* Registration ID */}
+        <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] p-5">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Your Registration ID</p>
+          <p className="mt-2 font-heading text-2xl tracking-wider text-amber-400 break-all sm:text-3xl">{submittedId}</p>
+          <button
+            type="button"
+            onClick={copyId}
+            className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-zinc-300 transition-colors hover:bg-white/[0.08]"
+          >
+            {copied ? (
+              <><svg className="h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>Copied</>
+            ) : (
+              <><svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>Copy ID</>
+            )}
+          </button>
+        </div>
 
-          {/* Info boxes */}
-          <div className="grid gap-3 text-left sm:grid-cols-3">
-            <div className="rounded-xl border border-sky-500/30 bg-sky-950/20 p-4">
-              <p className="text-xs font-bold uppercase tracking-wide text-sky-400 mb-1">📧 Check Your Email</p>
-              <p className="text-sm text-zinc-300">A confirmation email with your Registration ID has been sent. Check your inbox <span className="font-semibold text-white">and spam/junk folder</span>.</p>
-            </div>
-            <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-4">
-              <p className="text-xs font-bold uppercase tracking-wide text-amber-400 mb-1">🔖 Save Your ID</p>
-              <p className="text-sm text-zinc-300">Keep your Registration ID safe. You&apos;ll need it to <span className="font-semibold text-white">check your status</span> and receive further updates.</p>
-            </div>
-            <div className="rounded-xl border border-orange-500/30 bg-orange-950/20 p-4">
-              <p className="text-xs font-bold uppercase tracking-wide text-orange-400 mb-1">⏳ Verification Pending</p>
-              <p className="text-sm text-zinc-300">You can <span className="font-semibold text-white">only perform once VERIFIED</span>. Our team will review your payment screenshot shortly.</p>
-            </div>
+        {/* Info boxes — consistent style */}
+        <div className="grid gap-3 text-left sm:grid-cols-3">
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-400 mb-1.5">Check Email</p>
+            <p className="text-sm text-zinc-400">Confirmation sent to your inbox. Check <span className="font-semibold text-white">spam/junk</span> too.</p>
           </div>
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-400 mb-1.5">Save Your ID</p>
+            <p className="text-sm text-zinc-400">You&apos;ll need it to <span className="font-semibold text-white">check your status</span> and get updates.</p>
+          </div>
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-400 mb-1.5">Verification</p>
+            <p className="text-sm text-zinc-400">You can <span className="font-semibold text-white">only perform once VERIFIED</span>. We&apos;ll review your payment soon.</p>
+          </div>
+        </div>
 
-          {/* Next step */}
-          <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 text-sm text-zinc-400">
-            Use the <span className="font-semibold text-amber-300">Check Status</span> section below to track your verification status anytime using your Registration ID.
-          </div>
+        {/* Next step */}
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-sm text-zinc-500">
+          Use the <span className="font-semibold text-amber-400">Check Status</span> section below to track your verification anytime.
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative">
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 blur-3xl"></div>
-      <div className="card relative">
-        {/* Performers-only notice */}
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/40 bg-amber-950/20 p-4">
-          <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div className="text-sm">
-            <p className="font-bold text-amber-300">Performers Only</p>
-            <p className="mt-0.5 text-amber-200/80">This registration is exclusively for people who will be <span className="font-semibold text-white">performing on stage</span>. If you&apos;re attending as an audience member, you do <span className="font-semibold text-white">not</span> need to register.</p>
-          </div>
-        </div>
-
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-white">Registration Form</h2>
-          <p className="mt-2 text-zinc-400">Fill in your details to secure your spot</p>
-        </div>
-        
-        <form onSubmit={onSubmit} className="space-y-8">
-          <div className="rounded-2xl border border-gradient-to-r from-amber-500/20 to-orange-500/20 bg-gradient-to-br from-amber-950/20 to-orange-950/20 p-6">
+    <div>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5 sm:p-8">
+        <form onSubmit={onSubmit} className="space-y-10">
+          {/* ── Step 1: Payment ── */}
+          <div>
+            <div className="mb-5 flex items-center gap-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/[0.08] font-mono text-xs font-semibold text-amber-400">1</span>
+              <h2 className="font-heading text-2xl tracking-wide text-white sm:text-3xl">Payment</h2>
+            </div>
             <UPIPaymentCard qrUrl={settings.upi_qr_url} upiId={settings.upi_id} amount={settings.payment_amount} />
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+
+          {/* ── Step 2: Registration Details ── */}
+          <div>
+            <div className="mb-5 flex items-center gap-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/[0.08] font-mono text-xs font-semibold text-amber-400">2</span>
+              <h2 className="font-heading text-2xl tracking-wide text-white sm:text-3xl">Registration Details</h2>
+            </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
@@ -296,46 +292,43 @@ export function RegistrationForm({ settings }: Props) {
             <DynamicFieldInput key={field.id} field={field} />
           ))}
 
-          <div className="md:col-span-2 space-y-6">
-            <div className="rounded-2xl border border-green-500/30 bg-gradient-to-br from-green-950/30 to-emerald-950/30 p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="rounded-full bg-green-500/20 p-2">
-                  <svg className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-green-300">Payment Screenshot *</h3>
-                  <p className="text-sm text-green-200/70">Upload your payment confirmation</p>
-                </div>
-              </div>
-              <input
-                name="paymentScreenshot"
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                required
-                className="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-green-600/20 file:px-4 file:py-2 file:text-green-300 file:hover:bg-green-600/30"
-              />
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent md:col-span-2" />
+
+          {/* ── Step 3: Uploads ── */}
+          <div className="md:col-span-2">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/[0.08] font-mono text-xs font-semibold text-amber-400">3</span>
+              <h2 className="font-heading text-2xl tracking-wide text-white sm:text-3xl">Uploads</h2>
             </div>
 
-            <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-950/30 to-indigo-950/30 p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="rounded-full bg-blue-500/20 p-2">
-                  <svg className="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
+            <div className="space-y-5">
+              <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                <div className="mb-3">
+                  <h3 className="text-sm font-semibold text-white">Payment Screenshot *</h3>
+                  <p className="mt-0.5 text-xs text-zinc-500">Upload your payment confirmation (JPG, PNG, or WebP)</p>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-blue-300">Script Upload (Optional)</h3>
-                  <p className="text-sm text-blue-200/70">Upload your performance script (max 2MB)</p>
-                </div>
+                <input
+                  name="paymentScreenshot"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  required
+                  className="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-amber-400/[0.08] file:px-4 file:py-2 file:text-amber-300 file:hover:bg-amber-400/[0.14]"
+                />
               </div>
-              <input
-                name="scriptFile"
-                type="file"
-                accept=".pdf,.doc,.docx,.txt,.rtf"
-                className="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600/20 file:px-4 file:py-2 file:text-blue-300 file:hover:bg-blue-600/30"
-              />
+
+              <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                <div className="mb-3">
+                  <h3 className="text-sm font-semibold text-white">Script Upload <span className="font-normal text-zinc-500">(Optional)</span></h3>
+                  <p className="mt-0.5 text-xs text-zinc-500">Upload your performance script — max 2MB</p>
+                </div>
+                <input
+                  name="scriptFile"
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt,.rtf"
+                  className="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-amber-400/[0.08] file:px-4 file:py-2 file:text-amber-300 file:hover:bg-amber-400/[0.14]"
+                />
+              </div>
             </div>
           </div>
 
@@ -354,7 +347,7 @@ export function RegistrationForm({ settings }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full text-lg"
+              className="w-full rounded-full bg-amber-400 py-3.5 font-mono text-sm uppercase tracking-widest text-slate-900 shadow-lg shadow-amber-400/20 transition-all duration-300 hover:scale-[1.02] hover:bg-amber-300 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -362,12 +355,10 @@ export function RegistrationForm({ settings }: Props) {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Submitting Registration...
+                  Submitting...
                 </span>
               ) : (
-                <span className="flex items-center justify-center gap-2">
-                  🚀 Submit Registration
-                </span>
+                "Submit Registration"
               )}
             </button>
           </div>

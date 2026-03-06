@@ -21,8 +21,37 @@ export default function MicHero() {
 
   return (
     <section className="relative h-[100svh] w-full overflow-hidden" onMouseMove={handleMouseMove}>
+      {/* "10th Edition" backdrop text — offset upward so it sits behind the mic like a stage curtain */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center"
+        style={{ background: "#020617" }}
+      >
+        <div className="relative -translate-y-[8%] select-none text-center">
+          {/* Main large "10th" */}
+          <span
+            className="block font-heading text-[clamp(200px,38vw,520px)] leading-[0.8] text-amber-400/[0.09]"
+            style={{
+              textShadow:
+                "0 0 100px rgba(245,180,50,0.25), 0 0 200px rgba(245,158,11,0.12)",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            10th
+          </span>
+          {/* "Edition" smaller, wider tracking */}
+          <span
+            className="block font-heading text-[clamp(48px,9vw,130px)] uppercase leading-none tracking-[0.35em] text-amber-400/[0.06]"
+            style={{
+              textShadow: "0 0 80px rgba(245,180,50,0.15)",
+            }}
+          >
+            Edition
+          </span>
+        </div>
+      </div>
+
       {/* Three.js canvas mounts here */}
-      <div ref={containerRef} className="absolute inset-0 h-full w-full" style={{ background: "#020617" }} />
+      <div ref={containerRef} className="absolute inset-0 z-[2] h-full w-full" />
 
       {/* Radial spotlight glow overlay */}
       <div
@@ -62,10 +91,10 @@ export default function MicHero() {
             Register to Perform
           </Link>
           <Link
-            href="/announcements"
+            href="/legacy"
             className="rounded-full border border-white/20 px-6 py-2.5 text-center font-mono text-[11px] uppercase tracking-widest text-white/70 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:text-white sm:px-8 sm:py-3 sm:text-sm"
           >
-            Updates
+            10 Years of Legacy
           </Link>
         </div>
 

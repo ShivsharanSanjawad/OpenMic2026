@@ -23,12 +23,12 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
     const isMobile = container.clientWidth < 640;
 
     // ── Renderer ──
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.5));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setClearColor(0x020617);
+    renderer.setClearColor(0x020617, 0);
     container.appendChild(renderer.domElement);
 
     // ── Scene + Camera ──

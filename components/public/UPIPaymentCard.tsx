@@ -87,18 +87,17 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
     <>
       {lightbox}
 
-      <div className="relative overflow-hidden rounded-2xl border border-amber-400/30 bg-gradient-to-br from-amber-950/40 to-orange-950/40 p-6 shadow-2xl backdrop-blur-sm">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-600/10 to-orange-600/10"></div>
-        <div className="relative z-10">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 p-2">
-              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+        <div>
+          <div className="mb-5 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/[0.08]">
+              <svg className="h-5 w-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white">Make Payment</h3>
-              <p className="text-amber-200/80">Scan QR code or use UPI ID</p>
+              <h3 className="text-lg font-semibold text-white">Make Payment</h3>
+              <p className="text-sm text-zinc-500">Scan QR code or use UPI ID</p>
             </div>
           </div>
 
@@ -125,25 +124,22 @@ export function UPIPaymentCard({ qrUrl, upiId, amount }: Props) {
                   <p className="text-center text-xs text-amber-300/60">QR Not{"\n"}Available</p>
                 </div>
               )}
-              <div className="absolute -bottom-2 -right-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2 py-0.5 text-xs font-bold text-white shadow-lg">
-                ₹{amount || "0"}
-              </div>
             </div>
 
             {/* UPI info — fills remaining space */}
             <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-1">
-              <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
-                <p className="text-xs font-medium text-amber-200">UPI ID</p>
-                <p className="truncate font-mono text-sm font-semibold text-white sm:text-base">{upiId || "Not configured"}</p>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">UPI ID</p>
+                <p className="mt-1 truncate font-mono text-sm font-semibold text-white sm:text-base">{upiId || "Not configured"}</p>
               </div>
 
-              <div className="rounded-xl bg-gradient-to-r from-emerald-500/20 to-green-500/20 p-3">
-                <p className="text-xs font-medium text-emerald-200">Payment Amount</p>
-                <p className="text-xl font-bold text-white sm:text-2xl">₹{amount || "0"}</p>
+              <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.05] p-4 text-center sm:text-left">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Amount to Pay</p>
+                <p className="mt-1 font-heading text-3xl text-amber-400 sm:text-4xl">₹{amount || "0"}</p>
               </div>
 
-              <div className="rounded-xl bg-blue-500/20 p-3">
-                <p className="text-xs text-blue-200">📸 After payment, upload a clear screenshot below</p>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-3">
+                <p className="text-xs text-zinc-400">After payment, upload a clear screenshot below.</p>
               </div>
             </div>
           </div>
