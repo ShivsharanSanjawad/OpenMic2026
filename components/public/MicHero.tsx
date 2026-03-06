@@ -67,7 +67,7 @@ export default function MicHero() {
       {/* Text content */}
       <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-end px-4 pb-8 sm:pb-12">
         <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400/70 sm:mb-4 sm:text-[11px] sm:tracking-[0.35em]">
-          Cultural Committee · SPIT Mumbai
+          Editorial Committee · SPIT Mumbai
         </p>
 
         <h1

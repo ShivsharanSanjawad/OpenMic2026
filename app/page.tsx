@@ -168,7 +168,7 @@ export default async function Home() {
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 sm:p-8">
             <span className="inline-block font-heading text-2xl text-amber-400 sm:text-3xl">SPARK</span>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-[15px]">
-              The cultural committee of <span className="text-white">SPIT Mumbai</span>. We ignite creative expression through art, music, theatre, and the spoken word.
+              The editorial committee of <span className="text-white">SPIT Mumbai</span>. We ignite creative expression through art, music, theatre, and the spoken word.
             </p>
           </div>
 
