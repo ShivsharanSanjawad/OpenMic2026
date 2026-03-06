@@ -68,10 +68,10 @@ export async function sendPaymentVerifiedEmail(
   await transporter.sendMail({
     from,
     to: registration.email,
-    subject: "Payment Confirmed — See you at the Mic! ✅",
+    subject: "Payment Confirmed — See you at the Mic! ",
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;line-height:1.5">
-        <h2>Payment Verified ✅</h2>
+        <h2>Payment Verified </h2>
         <p>Hello ${registration.name},</p>
         <p>Your payment is verified for SPARK OpenMic 10.</p>
         <ul>
@@ -143,7 +143,7 @@ export async function sendReuploadReceivedEmail(registration: RegistrationMailDa
     subject: "Reupload received — Under Review",
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;line-height:1.5">
-        <h2>Correction Received ✅</h2>
+        <h2>Correction Received </h2>
         <p>Hello ${registration.name},</p>
         <p>We received your updated submission files and moved your registration back to review.</p>
         <ul>
