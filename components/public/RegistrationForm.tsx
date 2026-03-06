@@ -23,8 +23,10 @@ export function RegistrationForm({ settings }: Props) {
   useEffect(() => {
     if (!showTeamField) {
       setTeamMembers([""]);
+    } else if (performanceType === "duo" && teamMembers.length < 2) {
+      setTeamMembers(["", ""]);
     }
-  }, [showTeamField]);
+  }, [showTeamField, performanceType]);
 
   function getMitigation(message: string) {
     const value = message.toLowerCase();
@@ -61,8 +63,14 @@ export function RegistrationForm({ settings }: Props) {
     const formData = new FormData(form);
     const cleanedMembers = teamMembers.map((member) => member.trim()).filter(Boolean);
 
+    if (performanceType === "duo" && cleanedMembers.length < 2) {
+      setError("Duo performance requires both members' names.");
+      setLoading(false);
+      return;
+    }
+
     if (showTeamField && cleanedMembers.length === 0) {
-      setError("Please add at least one team member name for duo/group performance.");
+      setError("Please add at least one team member name for group performance.");
       setLoading(false);
       return;
     }
@@ -229,9 +237,9 @@ export function RegistrationForm({ settings }: Props) {
                 onChange={(e) => setPerformanceType(e.target.value)}
                 className="input-field"
               >
-                <option value="solo">🎤 Solo Performance</option>
-                <option value="duo">👥 Duo Performance</option>
-                <option value="group">🎭 Group Performance</option>
+                <option value="solo">Solo Performance</option>
+                <option value="duo">Duo Performance</option>
+                <option value="group">Group Performance</option>
               </select>
             </div>
 
@@ -255,17 +263,19 @@ export function RegistrationForm({ settings }: Props) {
                         setTeamMembers((current) => current.map((item, itemIndex) => (itemIndex === index ? e.target.value : item)));
                       }}
                       placeholder={`Team member ${index + 1} name`}
+                      required={performanceType === "duo" || undefined}
                       className="input-field flex-grow"
                     />
                     <button
                       type="button"
                       onClick={() => {
                         setTeamMembers((current) => {
-                          if (current.length <= 1) return current;
+                          const min = performanceType === "duo" ? 2 : 1;
+                          if (current.length <= min) return current;
                           return current.filter((_, itemIndex) => itemIndex !== index);
                         });
                       }}
-                      disabled={teamMembers.length <= 1}
+                      disabled={teamMembers.length <= (performanceType === "duo" ? 2 : 1)}
                       className="rounded-full bg-red-500/20 p-2 text-red-400 transition-colors hover:bg-red-500/30 disabled:opacity-50"
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
