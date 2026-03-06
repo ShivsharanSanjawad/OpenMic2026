@@ -249,10 +249,55 @@ export async function POST(request: NextRequest) {
     include: { adminComments: { orderBy: { createdAt: "asc" } } },
   });
 
+  if (!latest) {
+    return NextResponse.json(
+      { success: true, registration: { id: updated.id, paymentStatus: updated.paymentStatus } },
+      { status: 200 },
+    );
+  }
+
+  const reg = latest;
+  const tmRaw = reg.teamMembers;
+  const tmString = Array.isArray(tmRaw)
+    ? tmRaw.filter((s): s is string => typeof s === "string").join(", ")
+    : typeof tmRaw === "string"
+      ? tmRaw
+      : null;
+
+  function parseStringArray(value: unknown) {
+    if (!Array.isArray(value)) return [];
+    return value.filter((item): item is string => typeof item === "string");
+  }
+
   return NextResponse.json(
     {
       success: true,
-      registration: latest ?? updated,
+      registration: {
+        id: reg.id,
+        name: reg.name,
+        phone: reg.phone,
+        college: reg.college,
+        performanceType: reg.performanceType,
+        performanceTitle: reg.performanceTitle,
+        duration: reg.duration,
+        teamMembers: tmString,
+        paymentStatus: reg.paymentStatus,
+        requiresReupload: reg.requiresReupload,
+        allowedCorrectionFields: parseStringArray(reg.allowedCorrectionFields),
+        canReupload:
+          (reg.paymentStatus === "PENDING_CORRECTION" || reg.paymentStatus === "REJECTED")
+          && reg.requiresReupload,
+        adminComment: reg.adminComment,
+        commentHistory: reg.adminComments.map((c) => ({
+            id: c.id,
+            message: c.message,
+            status: c.status,
+            requiresReupload: c.requiresReupload,
+            allowedCorrectionFields: parseStringArray(c.allowedFields),
+            createdAt: c.createdAt.toISOString(),
+          })),
+        updatedAt: reg.updatedAt,
+      },
     },
     { status: 200 },
   );

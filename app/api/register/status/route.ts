@@ -24,6 +24,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Registration not found" }, { status: 404 });
   }
 
+  const teamMembersRaw = registration.teamMembers;
+  const teamMembersString = Array.isArray(teamMembersRaw)
+    ? teamMembersRaw.filter((s): s is string => typeof s === "string").join(", ")
+    : typeof teamMembersRaw === "string"
+      ? teamMembersRaw
+      : null;
+
   return NextResponse.json(
     {
       registration: {
@@ -34,18 +41,20 @@ export async function GET(request: NextRequest) {
         performanceType: registration.performanceType,
         performanceTitle: registration.performanceTitle,
         duration: registration.duration,
-        teamMembers: registration.teamMembers,
+        teamMembers: teamMembersString,
         paymentStatus: registration.paymentStatus,
         requiresReupload: registration.requiresReupload,
         allowedCorrectionFields: parseStringArray(registration.allowedCorrectionFields),
-        canReupload: registration.paymentStatus === "PENDING_CORRECTION" && registration.requiresReupload,
+        canReupload:
+          (registration.paymentStatus === "PENDING_CORRECTION" || registration.paymentStatus === "REJECTED")
+          && registration.requiresReupload,
         adminComment: registration.adminComment,
-        adminComments: registration.adminComments.map((c) => ({
+        commentHistory: registration.adminComments.map((c) => ({
           id: c.id,
           message: c.message,
           status: c.status,
           requiresReupload: c.requiresReupload,
-          allowedFields: parseStringArray(c.allowedFields),
+          allowedCorrectionFields: parseStringArray(c.allowedFields),
           createdAt: c.createdAt.toISOString(),
         })),
         updatedAt: registration.updatedAt,

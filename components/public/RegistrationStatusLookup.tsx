@@ -125,27 +125,7 @@ export function RegistrationStatusLookup() {
         return;
       }
 
-      setResult((current) =>
-        current
-          ? {
-              ...current,
-              phone: data.registration?.phone ?? current.phone,
-              college: data.registration?.college ?? current.college,
-              performanceTitle: data.registration?.performanceTitle ?? current.performanceTitle,
-              duration: data.registration?.duration ?? current.duration,
-              teamMembers: data.registration?.teamMembers ?? current.teamMembers,
-              paymentStatus: data.registration?.paymentStatus ?? "PENDING_REVIEW",
-              requiresReupload: false,
-              allowedCorrectionFields: [],
-              canReupload: false,
-              adminComment: data.registration?.adminComment ?? null,
-              commentHistory: Array.isArray(data.registration?.commentHistory)
-                ? data.registration.commentHistory
-                : current.commentHistory,
-              updatedAt: data.registration?.updatedAt ?? current.updatedAt,
-            }
-          : current,
-      );
+      setResult(data.registration as LookupResponse);
       setReuploadMessage("Files updated successfully. Your registration is now back in pending review.");
       event.currentTarget.reset();
     } catch {
@@ -229,7 +209,7 @@ export function RegistrationStatusLookup() {
                     <input
                       name="paymentScreenshot"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
                       className="input-field file:mr-4 file:rounded-md file:border-0 file:bg-zinc-700 file:px-3 file:py-1 file:text-zinc-200"
                     />
                   </div>
@@ -304,7 +284,7 @@ export function RegistrationStatusLookup() {
             </div>
           ) : null}
 
-          {result.paymentStatus === "REJECTED" && (
+          {result.paymentStatus === "REJECTED" && !result.canReupload && (
             <div className="card bg-red-900/20 border-red-800">
               <p className="text-red-300 text-sm">
                 🚫 This registration has been permanently rejected and no further action can be taken.
