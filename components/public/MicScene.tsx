@@ -39,7 +39,8 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
       0.1,
       100
     );
-    camera.position.set(0, isMobile ? 0.6 : 0.3, isMobile ? 5.5 : 6);
+    camera.position.set(0, isMobile ? 0.6 : 0.6, isMobile ? 5.5 : 6);
+    camera.lookAt(0, 0, 0);
 
     // ── Lights ──
     const ambient = new THREE.AmbientLight(0x1a1a2e, 0.08);
@@ -186,7 +187,8 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
       camera.aspect = w / h;
       camera.fov = mobile ? 50 : 42;
       camera.position.z = mobile ? 5.5 : 6;
-      camera.position.y = mobile ? 0.6 : 0.3;
+      camera.position.y = mobile ? 0.6 : 0.6;
+      camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     }

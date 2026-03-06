@@ -26,10 +26,10 @@ export default function MicHero() {
         className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center"
         style={{ background: "#020617" }}
       >
-        <div className="relative -translate-y-[8%] select-none text-center">
+        <div className="relative -translate-y-[55%] select-none text-center sm:-translate-y-[28%]">
           {/* Main large "10th" */}
           <span
-            className="block font-heading text-[clamp(200px,38vw,520px)] leading-[0.8] text-amber-400/[0.09]"
+            className="block font-heading text-[clamp(200px,38vw,520px)] leading-[0.8] text-amber-400/[0.09] sm:text-[clamp(160px,30vw,420px)]"
             style={{
               textShadow:
                 "0 0 100px rgba(245,180,50,0.25), 0 0 200px rgba(245,158,11,0.12)",
@@ -65,13 +65,13 @@ export default function MicHero() {
       />
 
       {/* Text content */}
-      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-end px-4 pb-8 sm:pb-16">
+      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-end px-4 pb-8 sm:pb-12">
         <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400/70 sm:mb-4 sm:text-[11px] sm:tracking-[0.35em]">
           Cultural Committee · SPIT Mumbai
         </p>
 
         <h1
-          className="text-center font-heading text-[clamp(48px,12vw,128px)] leading-[0.88] tracking-wide text-white"
+          className="text-center font-heading text-[clamp(48px,12vw,128px)] leading-[0.88] tracking-wide text-white lg:text-[clamp(48px,5vw,72px)]"
           style={{ textShadow: "0 0 80px rgba(245,180,50,0.3)" }}
         >
           SPARK
@@ -79,11 +79,11 @@ export default function MicHero() {
           <span className="text-amber-400">OpenMic</span>
         </h1>
 
-        <p className="mb-6 mt-3 font-mono text-[11px] italic tracking-[0.15em] text-white/40 sm:mb-8 sm:mt-4 sm:text-sm sm:tracking-[0.2em]">
+        <p className="mb-6 mt-3 font-mono text-[11px] italic tracking-[0.15em] text-white/40 sm:mb-6 sm:mt-4 sm:text-sm sm:tracking-[0.2em]">
           your voice · your mic · your stage
         </p>
 
-        <div className="pointer-events-auto mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:gap-4">
+        <div className="pointer-events-auto mb-6 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:gap-4">
           <Link
             href="/register"
             className="rounded-full bg-amber-400 px-6 py-2.5 text-center font-mono text-[11px] uppercase tracking-widest text-slate-900 shadow-lg shadow-amber-400/25 transition-all duration-300 hover:scale-105 hover:bg-amber-300 sm:px-8 sm:py-3 sm:text-sm"
