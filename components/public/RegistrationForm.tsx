@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DynamicField, PublicSettings } from "@/types";
 import { UPIPaymentCard } from "@/components/public/UPIPaymentCard";
 
@@ -228,20 +228,18 @@ export function RegistrationForm({ settings }: Props) {
             <Input name="phone" label="Phone Number" required maxLength={10} />
             <Input name="college" label="College / Institution" />
 
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-white">Performance Type *</label>
-              <select
-                name="performanceType"
-                required
-                value={performanceType}
-                onChange={(e) => setPerformanceType(e.target.value)}
-                className="input-field"
-              >
-                <option value="solo">Solo Performance</option>
-                <option value="duo">Duo Performance</option>
-                <option value="group">Group Performance</option>
-              </select>
-            </div>
+            <CustomSelect
+              name="performanceType"
+              label="Performance Type"
+              required
+              value={performanceType}
+              onChange={setPerformanceType}
+              options={[
+                { value: "solo", label: "Solo Performance" },
+                { value: "duo", label: "Duo Performance" },
+                { value: "group", label: "Group Performance" },
+              ]}
+            />
 
             <Input name="performanceTitle" label="Performance Title" placeholder="e.g. My Amazing Song" />
             <Input name="duration" label="Performance Duration" placeholder="e.g. 3 minutes" />
@@ -405,19 +403,13 @@ function DynamicFieldInput({ field }: { field: DynamicField }) {
 
   if (field.type === "select") {
     return (
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-white">
-          {field.label}{field.required && " *"}
-        </label>
-        <select name={`dynamic_${field.id}`} required={field.required} className="input-field">
-          <option value="">Select an option</option>
-          {(field.options ?? []).map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CustomSelect
+        name={`dynamic_${field.id}`}
+        label={field.label}
+        required={field.required}
+        options={(field.options ?? []).map((opt) => ({ value: opt, label: opt }))}
+        placeholder="Select an option"
+      />
     );
   }
 
@@ -454,6 +446,118 @@ function Input({
         maxLength={maxLength}
         className="input-field"
       />
+    </div>
+  );
+}
+
+function CustomSelect({
+  name,
+  label,
+  required,
+  value: controlledValue,
+  onChange: controlledOnChange,
+  options,
+  placeholder,
+}: {
+  name: string;
+  label: string;
+  required?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
+  options: { value: string; label: string }[];
+  placeholder?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [internalValue, setInternalValue] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+
+  const selected = controlledValue ?? internalValue;
+  const selectedLabel = options.find((o) => o.value === selected)?.label ?? placeholder ?? "Select…";
+  const isEmpty = !selected;
+
+  const choose = useCallback(
+    (val: string) => {
+      if (controlledOnChange) controlledOnChange(val);
+      else setInternalValue(val);
+      setOpen(false);
+    },
+    [controlledOnChange],
+  );
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  return (
+    <div className="space-y-2" ref={ref}>
+      <label className="block text-sm font-semibold text-white">
+        {label}{required && " *"}
+      </label>
+
+      {/* Hidden native input for form submission + validation */}
+      <input type="hidden" name={name} value={selected} />
+      {required && (
+        <input
+          tabIndex={-1}
+          autoComplete="off"
+          className="absolute opacity-0 h-0 w-0 pointer-events-none"
+          value={selected}
+          onChange={() => {}}
+          required
+        />
+      )}
+
+      {/* Trigger button */}
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className={`relative w-full rounded-xl border px-5 py-4 text-left transition-all duration-200 ${
+          open
+            ? "border-amber-400/40 bg-white/[0.05] shadow-[0_0_0_3px_rgba(245,158,11,0.08)]"
+            : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.12]"
+        }`}
+      >
+        <span className={isEmpty ? "text-zinc-500" : "text-zinc-100"}>{selectedLabel}</span>
+        <svg
+          className={`absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Dropdown panel */}
+      {open && (
+        <div className="relative z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c1021] shadow-2xl shadow-black/60">
+          <ul className="max-h-60 overflow-y-auto py-1">
+            {options.map((opt) => (
+              <li key={opt.value}>
+                <button
+                  type="button"
+                  onClick={() => choose(opt.value)}
+                  className={`flex w-full items-center gap-3 px-5 py-3 text-left text-sm transition-colors ${
+                    opt.value === selected
+                      ? "bg-amber-400/[0.10] text-amber-300"
+                      : "text-zinc-300 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                >
+                  {/* Indicator dot */}
+                  <span
+                    className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                      opt.value === selected ? "bg-amber-400" : "bg-transparent"
+                    }`}
+                  />
+                  {opt.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
