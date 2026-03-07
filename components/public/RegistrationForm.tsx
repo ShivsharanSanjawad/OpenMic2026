@@ -26,7 +26,7 @@ export function RegistrationForm({ settings }: Props) {
     } else if (performanceType === "duo" && teamMembers.length < 2) {
       setTeamMembers(["", ""]);
     }
-  }, [showTeamField, performanceType]);
+  }, [showTeamField, performanceType, teamMembers.length]);
 
   function getMitigation(message: string) {
     const value = message.toLowerCase();
