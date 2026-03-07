@@ -29,6 +29,6 @@ const result = await cloudinary.uploader.upload(videoPath, {
   eager_async: true,
 });
 
-console.log("\n✅ Upload complete!");
+console.log("\n Upload complete!");
 console.log("URL:", result.secure_url);
 console.log("\nSet this in page.tsx <video src=...> and in NEXT_PUBLIC_TEASER_URL env var.");
