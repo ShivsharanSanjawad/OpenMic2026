@@ -4,7 +4,9 @@ import { PublicSettings } from "@/types";
 const defaults: PublicSettings = {
   upi_qr_url: "",
   upi_id: "",
-  payment_amount: "0",
+  payment_amount_solo: "100",
+  payment_amount_duo: "120",
+  payment_amount_group: "150",
   form_fields: [],
   event_date: "TBD",
   event_venue: "TBD",
@@ -36,7 +38,9 @@ export async function getPublicSettings(): Promise<PublicSettings> {
   const keys: Array<keyof PublicSettings> = [
     "upi_qr_url",
     "upi_id",
-    "payment_amount",
+    "payment_amount_solo",
+    "payment_amount_duo",
+    "payment_amount_group",
     "form_fields",
     "event_date",
     "event_venue",

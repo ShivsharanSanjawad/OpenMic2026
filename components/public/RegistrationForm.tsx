@@ -204,7 +204,17 @@ export function RegistrationForm({ settings }: Props) {
               <span className="flex h-7 w-7 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/[0.08] font-mono text-xs font-semibold text-amber-400">1</span>
               <h2 className="font-heading text-2xl tracking-wide text-white sm:text-3xl">Payment</h2>
             </div>
-            <UPIPaymentCard qrUrl={settings.upi_qr_url} upiId={settings.upi_id} amount={settings.payment_amount} />
+            <UPIPaymentCard
+              qrUrl={settings.upi_qr_url}
+              upiId={settings.upi_id}
+              amount={
+                performanceType === "duo"
+                  ? settings.payment_amount_duo
+                  : performanceType === "group"
+                  ? settings.payment_amount_group
+                  : settings.payment_amount_solo
+              }
+            />
           </div>
 
           {/* Divider */}
@@ -243,11 +253,28 @@ export function RegistrationForm({ settings }: Props) {
 
             <Input name="performanceTitle" label="Performance Title" placeholder="e.g. My Amazing Song" />
             <Input name="duration" label="Performance Duration" placeholder="e.g. 3 minutes" />
+
+            {/* Selection summary — fills the empty grid cell beside Duration */}
+            <div className="flex flex-col justify-center rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] px-5 py-4 gap-1">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Selected</p>
+              <p className="text-base font-semibold text-white">
+                {performanceType === "solo" ? "Solo Performance" : performanceType === "duo" ? "Duo Performance" : "Group Performance"}
+              </p>
+              <p className="font-mono text-lg font-bold text-amber-400">
+                ₹
+                {performanceType === "duo"
+                  ? settings.payment_amount_duo
+                  : performanceType === "group"
+                  ? settings.payment_amount_group
+                  : settings.payment_amount_solo}
+              </p>
+              <p className="text-[11px] text-zinc-500">Registration fee</p>
+            </div>
           </div>
 
           {showTeamField && (
             <div className="md:col-span-2 space-y-4">
-              <h3 className="text-lg font-semibold text-white">👥 Team Members</h3>
+              <h3 className="text-lg font-semibold text-white"> Team Members</h3>
               <input type="hidden" name="teamMembers" value={teamMembers.map((member) => member.trim()).filter(Boolean).join(", ")} />
               <div className="space-y-3">
                 {teamMembers.map((member, index) => (

@@ -20,7 +20,16 @@ export default async function SettingsPage({ params }: { params: Promise<{ admin
           <h1 className="text-3xl font-black text-amber-300">Settings</h1>
           <p className="text-sm text-zinc-400 mt-0.5">Manage event settings, payment info, and form fields</p>
         </div>
-        <QRUploader basePath={adminPath} initialQr={settings.upi_qr_url} initialOpen={settings.registrations_open === "true"} />
+        <QRUploader
+          basePath={adminPath}
+          initialQr={settings.upi_qr_url}
+          initialOpen={settings.registrations_open === "true"}
+          initialAmounts={{
+            solo:  settings.payment_amount_solo,
+            duo:   settings.payment_amount_duo,
+            group: settings.payment_amount_group,
+          }}
+        />
         <FormFieldEditor basePath={adminPath} initialFields={settings.form_fields} />
       </section>
     </main>
