@@ -203,3 +203,64 @@ select.input-field option {
 ::-webkit-scrollbar-corner {
   background: #020617;
 }
+
+@keyframes beamDustDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translate3d(1.5%, -2.5%, 0) scale(1.015);
+    opacity: 0.24;
+  }
+  100% {
+    transform: translate3d(-1%, -5%, 0) scale(1.03);
+    opacity: 0.16;
+  }
+}
+
+.beam-particles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 22% 30%, rgba(255, 230, 190, 0.40) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 64% 68%, rgba(255, 215, 160, 0.30) 0 0.9px, transparent 1.9px),
+    radial-gradient(circle at 44% 52%, rgba(255, 240, 210, 0.24) 0 0.7px, transparent 1.7px);
+  background-size: 190px 210px, 240px 260px, 160px 180px;
+  background-repeat: repeat;
+  opacity: 0.14;
+  animation: beamDustDrift 22s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+/*
+  Clip-path polygons match the SVG spotlight cone geometry exactly
+  (proportions derived from the 1000×700 viewBox: 240/1000=24%, 560/1000=56%, etc.)
+*/
+/* Clip-paths match SVG beam triangles: fixture at top corners → mic at (50%, 36%) */
+.beam-particles-left {
+  clip-path: polygon(0% 0%, 22% 0%, 50% 36%);
+}
+
+.beam-particles-right {
+  clip-path: polygon(78% 0%, 100% 0%, 50% 36%);
+}
+
+.beam-particles-slow {
+  animation-duration: 30s;
+  opacity: 0.09;
+  filter: blur(0.3px);
+}
+
+@media (max-width: 767px) {
+  .beam-particles {
+    background-size: 260px 300px, 320px 340px, 220px 260px;
+    opacity: 0.07;
+    animation-duration: 28s;
+  }
+
+  .beam-particles-slow {
+    opacity: 0.045;
+    animation-duration: 36s;
+  }
+}

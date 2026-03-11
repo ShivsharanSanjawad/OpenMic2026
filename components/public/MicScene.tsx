@@ -28,6 +28,10 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // ACES filmic tone-mapping lets specular highlights on metal look
+    // punchy and cinematic instead of clipping to flat white/grey
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.30;
     renderer.setClearColor(0x020617, 0);
     container.appendChild(renderer.domElement);
 
@@ -43,23 +47,53 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
     camera.lookAt(0, 0, 0);
 
     // ── Lights ──
-    const ambient = new THREE.AmbientLight(0x1a1a2e, 0.08);
+    // Dim ambient — just enough to keep deep-shadow faces from going pitch black
+    const ambient = new THREE.AmbientLight(0x111827, 0.35);
     scene.add(ambient);
 
-    const spotlight = new THREE.SpotLight(0xfff4d6, 120, 0, 0.28, 0.6);
-    spotlight.position.set(0, 6, 3);
-    spotlight.castShadow = true;
-    spotlight.shadow.mapSize.set(isMobile ? 1024 : 2048, isMobile ? 1024 : 2048);
-    spotlight.shadow.bias = -0.0001;
-    scene.add(spotlight);
-    scene.add(spotlight.target);
+    // ── Crown / key spotlight — tight angle from slightly forward-above ──
+    // Positioned at (0, 9, 2.5) so it hits both the top cap AND the front face
+    // of the grill for a visible metallic highlight. Tighter angle (0.16) and
+    // harder penumbra (0.25) keep the hot-spot punchy rather than diffuse.
+    const spotCrown = new THREE.SpotLight(0xfff5e0, isMobile ? 120 : 240, 0, 0.16, 0.25);
+    spotCrown.position.set(0, 9, 2.5);
+    spotCrown.target.position.set(0, 0, 0);
+    spotCrown.castShadow = true;
+    spotCrown.shadow.mapSize.set(isMobile ? 512 : 2048, isMobile ? 512 : 2048);
+    spotCrown.shadow.bias = -0.0001;
+    scene.add(spotCrown);
+    scene.add(spotCrown.target);
 
-    const rimLight = new THREE.PointLight(0x3b6fd4, 18, 12, 2);
-    rimLight.position.set(-4, 1, 2);
-    scene.add(rimLight);
+    // ── Left stage spotlight — upper-left angled in ──
+    const spotLeft = new THREE.SpotLight(0xffd580, isMobile ? 72 : 130, 0, 0.28, 0.45);
+    spotLeft.position.set(-5, 7, 4);
+    spotLeft.target.position.set(0, 0, 0);
+    spotLeft.castShadow = false;
+    scene.add(spotLeft);
+    scene.add(spotLeft.target);
 
-    const fillLight = new THREE.PointLight(0xff9a3c, 8, 8, 2);
-    fillLight.position.set(1.5, -1, 3);
+    // ── Right stage spotlight — upper-right angled in ──
+    const spotRight = new THREE.SpotLight(0xffe8a0, isMobile ? 60 : 110, 0, 0.26, 0.45);
+    spotRight.position.set(5, 7, 4);
+    spotRight.target.position.set(0, 0, 0);
+    spotRight.castShadow = false;
+    scene.add(spotRight);
+    scene.add(spotRight.target);
+
+    // ── Left rim light — warm amber edge from behind-left ──
+    // Separates the mic silhouette from the dark background on the left side
+    const rimLeft = new THREE.PointLight(0xffaa30, isMobile ? 10 : 22, 5, 2);
+    rimLeft.position.set(-2.0, 0.5, -1.8);
+    scene.add(rimLeft);
+
+    // ── Right rim light — slightly cooler for subtle contrast ──
+    const rimRight = new THREE.PointLight(0xffcc60, isMobile ? 8 : 18, 5, 2);
+    rimRight.position.set(2.0, 0.5, -1.8);
+    scene.add(rimRight);
+
+    // ── Front fill — keeps grill details readable without washing out ──
+    const fillLight = new THREE.PointLight(0xff9a3c, isMobile ? 5 : 10, 7, 2);
+    fillLight.position.set(0, 0.5, 4.2);
     scene.add(fillLight);
 
     // ── Shadow plane ──
@@ -123,21 +157,30 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
         micPivot.add(model);
         scene.add(micPivot);
 
-        // Enable shadows + apply a metallic fallback material for meshes
-        // whose textures failed to load from the GLB
-        const fallback = new THREE.MeshStandardMaterial({
-          color: 0x888888,
+        // Polished fallback for meshes whose GLB textures failed to load
+        const polishedFallback = new THREE.MeshStandardMaterial({
+          color: 0x909090,
           metalness: 0.95,
-          roughness: 0.15,
+          roughness: 0.08,
         });
+
         model.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             const mat = mesh.material as THREE.MeshStandardMaterial;
-            if (mat.map && !mat.map.image) {
-              mesh.material = fallback;
+            if (mat && (mat as THREE.MeshStandardMaterial).isMeshStandardMaterial) {
+              if (mat.map && !mat.map.image) {
+                // Texture broken — swap to polished fallback
+                mesh.material = polishedFallback;
+              } else {
+                // Texture fine (or no texture) — boost the surface to be
+                // properly metallic so stage lights produce visible highlights
+                mat.metalness = Math.max(mat.metalness ?? 0, 0.88);
+                mat.roughness = Math.min(mat.roughness ?? 1, 0.18);
+                mat.needsUpdate = true;
+              }
             }
           }
         });
@@ -164,8 +207,9 @@ export function useMicScene(containerRef: React.RefObject<HTMLDivElement | null>
         micPivot.rotation.x = THREE.MathUtils.lerp(micPivot.rotation.x, mouse.y * 0.18, 0.05);
       }
 
-      spotlight.position.x = THREE.MathUtils.lerp(spotlight.position.x, mouse.x * 1.5, 0.04);
-      spotlight.position.z = THREE.MathUtils.lerp(spotlight.position.z, 3 + mouse.y * 0.8, 0.04);
+      // Subtle mouse-driven sway on the left light only — right stays fixed for asymmetric drama
+      spotLeft.position.x = THREE.MathUtils.lerp(spotLeft.position.x, -5 + mouse.x * 0.6, 0.03);
+      spotLeft.position.z = THREE.MathUtils.lerp(spotLeft.position.z, 4 + mouse.y * 0.4, 0.03);
 
       const pos = particleGeo.attributes.position.array as Float32Array;
       for (let i = 0; i < PARTICLE_COUNT; i++) {

@@ -27,22 +27,27 @@ export default function MicHero() {
         style={{ background: "#020617" }}
       >
         <div className="relative -translate-y-[55%] select-none text-center sm:-translate-y-[28%]">
-          {/* Main large "10th" */}
+          {/* Main large "10th" — curtain feel: edges dark, center faintly lit */}
           <span
-            className="block font-heading text-[clamp(200px,38vw,520px)] leading-[0.8] text-amber-400/[0.09] sm:text-[clamp(160px,30vw,420px)]"
+            className="block font-heading text-[clamp(200px,38vw,520px)] leading-[0.8] text-amber-200/[0.11] sm:text-[clamp(160px,30vw,420px)]"
             style={{
               textShadow:
-                "0 0 100px rgba(245,180,50,0.25), 0 0 200px rgba(245,158,11,0.12)",
+                "0 0 60px rgba(245,175,50,0.22), 0 0 160px rgba(245,158,11,0.08)",
               letterSpacing: "-0.02em",
+              /* Horizontal fade: fully faded at the sides, visible in the spotlight-lit center */
+              WebkitMaskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 22%, black 40%, black 60%, rgba(0,0,0,0.6) 78%, transparent 100%)",
+              maskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 22%, black 40%, black 60%, rgba(0,0,0,0.6) 78%, transparent 100%)",
             }}
           >
             10th
           </span>
-          {/* "Edition" smaller, wider tracking */}
+          {/* "Edition" subtitle — very faint, barely legible like a dark stage curtain label */}
           <span
-            className="block font-heading text-[clamp(48px,9vw,130px)] uppercase leading-none tracking-[0.35em] text-amber-400/[0.06]"
+            className="block font-heading text-[clamp(48px,9vw,130px)] uppercase leading-none tracking-[0.35em] text-amber-200/[0.055]"
             style={{
-              textShadow: "0 0 80px rgba(245,180,50,0.15)",
+              textShadow: "0 0 60px rgba(245,175,50,0.10)",
+              WebkitMaskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 30%, black 48%, black 52%, rgba(0,0,0,0.5) 70%, transparent 100%)",
+              maskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 30%, black 48%, black 52%, rgba(0,0,0,0.5) 70%, transparent 100%)",
             }}
           >
             Edition
@@ -53,16 +58,112 @@ export default function MicHero() {
       {/* Three.js canvas mounts here */}
       <div ref={containerRef} className="absolute inset-0 z-[2] h-full w-full" />
 
-      {/* Radial spotlight glow overlay */}
+      {/* ── Theatrical spotlight beams — wide cones from upper corners converging on mic ── */}
+      <svg
+        className="pointer-events-none absolute inset-0 z-[10] h-full w-full"
+        viewBox="0 0 1000 700"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          {/*
+            Gradient axis travels from each fixture origin toward a point well
+            below the mic (y=380) so the beam still carries warm light at y=252
+            instead of fading to zero before it reaches the microphone.
+          */}
+          <linearGradient id="spl-l" x1="0" y1="0" x2="500" y2="380" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"  stopColor="#ffd060" stopOpacity="0.48" />
+            <stop offset="30%" stopColor="#ffca60" stopOpacity="0.22" />
+            <stop offset="62%" stopColor="#ffb840" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#ffa030" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="spl-r" x1="1000" y1="0" x2="500" y2="380" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"  stopColor="#ffe070" stopOpacity="0.44" />
+            <stop offset="30%" stopColor="#ffd060" stopOpacity="0.20" />
+            <stop offset="62%" stopColor="#ffb840" stopOpacity="0.07" />
+            <stop offset="100%" stopColor="#ffa030" stopOpacity="0" />
+          </linearGradient>
+
+          {/* Core — brighter strip down the axis of each beam */}
+          <linearGradient id="spl-l-core" x1="0" y1="0" x2="500" y2="320" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"  stopColor="#ffe898" stopOpacity="0.60" />
+            <stop offset="30%" stopColor="#ffd878" stopOpacity="0.26" />
+            <stop offset="62%" stopColor="#ffcc60" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#ffb040" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="spl-r-core" x1="1000" y1="0" x2="500" y2="320" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"  stopColor="#ffe898" stopOpacity="0.55" />
+            <stop offset="30%" stopColor="#ffd878" stopOpacity="0.23" />
+            <stop offset="62%" stopColor="#ffcc60" stopOpacity="0.07" />
+            <stop offset="100%" stopColor="#ffb040" stopOpacity="0" />
+          </linearGradient>
+
+          {/* Pool — warm radial glow where both beams converge at the mic */}
+          <radialGradient id="spl-pool" cx="500" cy="252" r="220" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"  stopColor="#ffd878" stopOpacity="0.24" />
+            <stop offset="50%" stopColor="#ffb840" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#ff9020" stopOpacity="0" />
+          </radialGradient>
+
+          {/*
+            Blur values tuned to the much wider base polygons below.
+            spl-outer: very wide feather (32) so the ~430 px base cone has a
+              smooth atmospheric edge rather than any visible boundary.
+            spl-shaft: moderate (13) — keeps the main cone soft but gives it
+              a recognisable shape without looking like a hard edge.
+            spl-core: light (5) — just enough to avoid pixellation on the
+              bright centre strip while keeping it visible and defined.
+          */}
+          <filter id="spl-outer" x="-30%" y="-10%" width="160%" height="130%">
+            <feGaussianBlur stdDeviation="32" />
+          </filter>
+          <filter id="spl-shaft" x="-25%" y="-10%" width="150%" height="120%">
+            <feGaussianBlur stdDeviation="13" />
+          </filter>
+          <filter id="spl-core" x="-60%" y="-10%" width="220%" height="120%">
+            <feGaussianBlur stdDeviation="5" />
+          </filter>
+          <filter id="spl-pool-f" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="34" />
+          </filter>
+        </defs>
+
+        {/*
+          Left beam — base spans from the far-left edge to 430 px (43 % of viewBox).
+          Three layers: wide hazy penumbra → visible shaft → bright core strip.
+          All three share the same tip at (500,252) — the mic position.
+        */}
+        <polygon points="0,0 430,0 500,252"   fill="url(#spl-l)"      filter="url(#spl-outer)" opacity="0.95" />
+        <polygon points="0,0 320,0 500,252"   fill="url(#spl-l)"      filter="url(#spl-shaft)" opacity="0.80" />
+        <polygon points="0,0 200,0 500,252"   fill="url(#spl-l-core)" filter="url(#spl-core)"  opacity="0.65" />
+
+        {/*
+          Right beam — mirrors left: base from 570 px to right edge (1000).
+        */}
+        <polygon points="570,0 1000,0 500,252" fill="url(#spl-r)"      filter="url(#spl-outer)" opacity="0.90" />
+        <polygon points="680,0 1000,0 500,252" fill="url(#spl-r)"      filter="url(#spl-shaft)" opacity="0.76" />
+        <polygon points="800,0 1000,0 500,252" fill="url(#spl-r-core)" filter="url(#spl-core)"  opacity="0.62" />
+
+        {/* Convergence pool — diffuse warm glow at the mic position */}
+        <ellipse cx="500" cy="248" rx="220" ry="160"
+          fill="url(#spl-pool)" filter="url(#spl-pool-f)" />
+      </svg>
+
+      {/* Bottom vignette — darkens the lower stage so text stays readable */}
       <div
-        className="pointer-events-none absolute inset-0 z-10"
+        className="pointer-events-none absolute inset-0 z-[12]"
         style={{
-          background: `
-            radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,200,80,0.07) 0%, transparent 70%),
-            radial-gradient(ellipse 100% 60% at 50% 100%, rgba(2,6,23,0.95) 0%, transparent 60%)
-          `,
+          background: "linear-gradient(to top, #020617 0%, rgba(2,6,23,0.90) 22%, transparent 50%)",
         }}
       />
+
+      {/* Dust motes inside left/right spotlight beams */}
+      <div className="pointer-events-none absolute inset-0 z-[11] overflow-hidden">
+        <div className="beam-particles beam-particles-left" />
+        <div className="beam-particles beam-particles-left beam-particles-slow" />
+        <div className="beam-particles beam-particles-right" />
+        <div className="beam-particles beam-particles-right beam-particles-slow" />
+      </div>
 
       {/* Text content */}
       <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-end px-4 pb-8 sm:pb-12">
