@@ -20,7 +20,7 @@ export function QRUploader({
   basePath: string;
   initialQr: string;
   initialOpen: boolean;
-  initialAmounts: { solo: string; duo: string; group: string };
+  initialAmounts: { solo: string; group: string };
 }) {
   const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const [preview, setPreview] = useState(initialQr);
@@ -106,7 +106,7 @@ export function QRUploader({
         {/* Per-type payment amounts */}
         <div className="space-y-2">
           <p className="text-xs font-medium text-zinc-400 uppercase tracking-wide">Registration Amount (₹) by Type</p>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="block text-xs text-zinc-500">Solo</label>
               <input
@@ -115,17 +115,6 @@ export function QRUploader({
                 min="0"
                 placeholder="e.g. 100"
                 defaultValue={initialAmounts.solo}
-                className={inputCls}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="block text-xs text-zinc-500">Duo</label>
-              <input
-                name="payment_amount_duo"
-                type="number"
-                min="0"
-                placeholder="e.g. 120"
-                defaultValue={initialAmounts.duo}
                 className={inputCls}
               />
             </div>

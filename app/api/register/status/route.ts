@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
         college: registration.college,
         performanceType: registration.performanceType,
         performanceTitle: registration.performanceTitle,
-        duration: registration.duration,
         teamMembers: teamMembersString,
         paymentStatus: registration.paymentStatus,
         requiresReupload: registration.requiresReupload,

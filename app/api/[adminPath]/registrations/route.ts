@@ -13,7 +13,6 @@ const correctionFieldOptions = [
   "college",
   "phone",
   "performanceTitle",
-  "duration",
   "teamMembers",
 ] as const;
 

@@ -16,7 +16,6 @@ model Registration {
   college                 String?
   performanceType         PerformanceType
   performanceTitle        String?
-  duration                String?
   teamMembers             Json?
   paymentScreenshot       String
   extraFields             Json?
@@ -92,7 +91,6 @@ model User {
 
 enum PerformanceType {
   solo
-  duo
   group
 }
 

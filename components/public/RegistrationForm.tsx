@@ -18,12 +18,12 @@ export function RegistrationForm({ settings }: Props) {
   const maxScriptBytes = 2 * 1024 * 1024;
   const maxScreenshotBytes = 1 * 1024 * 1024;
 
-  const showTeamField = useMemo(() => performanceType === "duo" || performanceType === "group", [performanceType]);
+  const showTeamField = useMemo(() => performanceType === "group", [performanceType]);
 
   useEffect(() => {
     if (!showTeamField) {
       setTeamMembers([""]);
-    } else if (performanceType === "duo" && teamMembers.length < 2) {
+    } else if (teamMembers.length < 2) {
       setTeamMembers(["", ""]);
     }
   }, [showTeamField, performanceType, teamMembers.length]);
@@ -63,14 +63,8 @@ export function RegistrationForm({ settings }: Props) {
     const formData = new FormData(form);
     const cleanedMembers = teamMembers.map((member) => member.trim()).filter(Boolean);
 
-    if (performanceType === "duo" && cleanedMembers.length < 2) {
-      setError("Duo performance requires both members' names.");
-      setLoading(false);
-      return;
-    }
-
-    if (showTeamField && cleanedMembers.length === 0) {
-      setError("Please add at least one team member name for group performance.");
+    if (showTeamField && cleanedMembers.length < 2) {
+      setError("Group performance requires at least 2 member names.");
       setLoading(false);
       return;
     }
@@ -208,9 +202,7 @@ export function RegistrationForm({ settings }: Props) {
               qrUrl={settings.upi_qr_url}
               upiId={settings.upi_id}
               amount={
-                performanceType === "duo"
-                  ? settings.payment_amount_duo
-                  : performanceType === "group"
+                performanceType === "group"
                   ? settings.payment_amount_group
                   : settings.payment_amount_solo
               }
@@ -246,25 +238,21 @@ export function RegistrationForm({ settings }: Props) {
               onChange={setPerformanceType}
               options={[
                 { value: "solo", label: "Solo Performance" },
-                { value: "duo", label: "Duo Performance" },
                 { value: "group", label: "Group Performance" },
               ]}
             />
 
             <Input name="performanceTitle" label="Performance Title" placeholder="e.g. My Amazing Song" />
-            <Input name="duration" label="Performance Duration" placeholder="e.g. 3 minutes" />
 
-            {/* Selection summary — fills the empty grid cell beside Duration */}
+            {/* Selection summary */}
             <div className="flex flex-col justify-center rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] px-5 py-4 gap-1">
               <p className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Selected</p>
               <p className="text-base font-semibold text-white">
-                {performanceType === "solo" ? "Solo Performance" : performanceType === "duo" ? "Duo Performance" : "Group Performance"}
+                {performanceType === "group" ? "Group Performance" : "Solo Performance"}
               </p>
               <p className="font-mono text-lg font-bold text-amber-400">
                 ₹
-                {performanceType === "duo"
-                  ? settings.payment_amount_duo
-                  : performanceType === "group"
+                {performanceType === "group"
                   ? settings.payment_amount_group
                   : settings.payment_amount_solo}
               </p>
@@ -288,19 +276,19 @@ export function RegistrationForm({ settings }: Props) {
                         setTeamMembers((current) => current.map((item, itemIndex) => (itemIndex === index ? e.target.value : item)));
                       }}
                       placeholder={`Team member ${index + 1} name`}
-                      required={performanceType === "duo" || undefined}
+                      required
                       className="input-field flex-grow"
                     />
                     <button
                       type="button"
                       onClick={() => {
                         setTeamMembers((current) => {
-                          const min = performanceType === "duo" ? 2 : 1;
+                          const min = 2;
                           if (current.length <= min) return current;
                           return current.filter((_, itemIndex) => itemIndex !== index);
                         });
                       }}
-                      disabled={teamMembers.length <= (performanceType === "duo" ? 2 : 1)}
+                      disabled={teamMembers.length <= 2}
                       className="rounded-full bg-red-500/20 p-2 text-red-400 transition-colors hover:bg-red-500/30 disabled:opacity-50"
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -42,7 +42,6 @@ export async function PUT(
 
   const upiId = sanitizeText(formData.get("upi_id"), 120);
   const paymentAmountSolo  = sanitizeText(formData.get("payment_amount_solo"),  20);
-  const paymentAmountDuo   = sanitizeText(formData.get("payment_amount_duo"),   20);
   const paymentAmountGroup = sanitizeText(formData.get("payment_amount_group"), 20);
   const eventDate = sanitizeText(formData.get("event_date"), 120);
   const eventVenue = sanitizeText(formData.get("event_venue"), 180);
@@ -52,7 +51,6 @@ export async function PUT(
 
   if (upiId) await setSetting("upi_id", upiId);
   if (paymentAmountSolo)  await setSetting("payment_amount_solo",  paymentAmountSolo);
-  if (paymentAmountDuo)   await setSetting("payment_amount_duo",   paymentAmountDuo);
   if (paymentAmountGroup) await setSetting("payment_amount_group", paymentAmountGroup);
   if (eventDate) await setSetting("event_date", eventDate);
   if (eventVenue) await setSetting("event_venue", eventVenue);

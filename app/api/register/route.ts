@@ -31,9 +31,8 @@ const schema = z.object({
   email: z.email(),
   phone: z.string().regex(/^\d{10}$/),
   college: z.string().max(140).optional(),
-  performanceType: z.enum(["solo", "duo", "group"]),
+  performanceType: z.enum(["solo", "group"]),
   performanceTitle: z.string().max(140).optional(),
-  duration: z.string().max(30).optional(),
   teamMembers: z.string().max(400).optional(),
 });
 
@@ -98,7 +97,6 @@ export async function POST(request: NextRequest) {
     college: sanitizeText(formData.get("college")),
     performanceType: sanitizeText(formData.get("performanceType")).toLowerCase(),
     performanceTitle: sanitizeText(formData.get("performanceTitle")),
-    duration: sanitizeText(formData.get("duration")),
     teamMembers: sanitizeText(formData.get("teamMembers"), 400),
   };
 
@@ -165,6 +163,13 @@ export async function POST(request: NextRequest) {
     ? parsed.data.teamMembers.split(",").map((s) => s.trim()).filter(Boolean)
     : null;
 
+  if (parsed.data.performanceType === "group" && (!teamMembersArray || teamMembersArray.length < 2)) {
+    return NextResponse.json(
+      { error: "Group performance requires at least 2 team member names" },
+      { status: 400 },
+    );
+  }
+
   const registration = await prisma.registration.create({
     data: {
       name: parsed.data.name,
@@ -173,7 +178,6 @@ export async function POST(request: NextRequest) {
       college: parsed.data.college,
       performanceType: parsed.data.performanceType,
       performanceTitle: parsed.data.performanceTitle,
-      duration: parsed.data.duration,
       paymentScreenshot: screenshotUrl,
       scriptFile: scriptUrl,
       extraFields: sanitizeJsonInput(dynamicFields) as Prisma.InputJsonValue,

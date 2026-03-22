@@ -20,7 +20,6 @@ type Row = {
   college: string | null;
   performanceType: string;
   performanceTitle: string | null;
-  duration: string | null;
   teamMembers: string[] | null;
   paymentStatus: "PENDING_REVIEW" | "PENDING_CORRECTION" | "VERIFIED" | "REJECTED";
   paymentScreenshot: string;
@@ -52,7 +51,6 @@ const STATUS_BADGE: Record<Row["paymentStatus"], string> = {
 
 const PERF_LABELS: Record<string, string> = {
   solo: "Solo",
-  duo: "Duo",
   group: "Group",
 };
 
@@ -114,7 +112,6 @@ export function RegistrationsTable({ basePath, rows }: { basePath: string; rows:
     { key: "college", label: "College" },
     { key: "phone", label: "Phone" },
     { key: "performanceTitle", label: "Performance Title" },
-    { key: "duration", label: "Duration" },
     { key: "teamMembers", label: "Team Members" },
   ];
 
@@ -385,7 +382,6 @@ export function RegistrationsTable({ basePath, rows }: { basePath: string; rows:
                 <div className="space-y-1.5">
                   <p><span className="inline-block w-20 text-zinc-400">Type</span><span className="text-white">{PERF_LABELS[activeRegistration.performanceType] ?? activeRegistration.performanceType}</span></p>
                   <p><span className="inline-block w-20 text-zinc-400">Title</span><span className="text-white">{activeRegistration.performanceTitle ?? "—"}</span></p>
-                  <p><span className="inline-block w-20 text-zinc-400">Duration</span><span className="text-white">{activeRegistration.duration ?? "—"}</span></p>
                 </div>
               </div>
               {parseTeamMembers(activeRegistration.teamMembers).length > 0 && (

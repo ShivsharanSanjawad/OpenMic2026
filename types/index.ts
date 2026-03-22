@@ -12,7 +12,6 @@ export type PublicSettings = {
   upi_qr_url: string;
   upi_id: string;
   payment_amount_solo: string;
-  payment_amount_duo: string;
   payment_amount_group: string;
   form_fields: DynamicField[];
   event_date: string;

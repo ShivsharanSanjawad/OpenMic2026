@@ -25,7 +25,6 @@ const editableFieldOptions = [
   "college",
   "phone",
   "performanceTitle",
-  "duration",
   "teamMembers",
 ] as const;
 
@@ -52,7 +51,6 @@ export async function POST(request: NextRequest) {
   const college = sanitizeText(formData.get("college"), 140);
   const phone = sanitizeText(formData.get("phone"), 20);
   const performanceTitle = sanitizeText(formData.get("performanceTitle"), 140);
-  const duration = sanitizeText(formData.get("duration"), 30);
   const teamMembers = sanitizeText(formData.get("teamMembers"), 400);
 
   if (!registrationId) {
@@ -91,7 +89,6 @@ export async function POST(request: NextRequest) {
   const hasCollege = Boolean(college);
   const hasPhone = Boolean(phone);
   const hasPerformanceTitle = Boolean(performanceTitle);
-  const hasDuration = Boolean(duration);
   const hasTeamMembers = Boolean(teamMembers);
 
   if (hasScreenshot && !allowedFields.has("paymentScreenshot")) {
@@ -114,15 +111,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Performance title updates are not allowed for this registration" }, { status: 400 });
   }
 
-  if (hasDuration && !allowedFields.has("duration")) {
-    return NextResponse.json({ error: "Duration updates are not allowed for this registration" }, { status: 400 });
-  }
-
   if (hasTeamMembers && !allowedFields.has("teamMembers")) {
     return NextResponse.json({ error: "Team member updates are not allowed for this registration" }, { status: 400 });
   }
 
-  if (!hasScreenshot && !hasScript && !hasCollege && !hasPhone && !hasPerformanceTitle && !hasDuration && !hasTeamMembers) {
+  if (!hasScreenshot && !hasScript && !hasCollege && !hasPhone && !hasPerformanceTitle && !hasTeamMembers) {
     return NextResponse.json({ error: "Submit at least one allowed correction field" }, { status: 400 });
   }
 
@@ -196,7 +189,6 @@ export async function POST(request: NextRequest) {
         ...(hasCollege ? { college } : {}),
         ...(hasPhone ? { phone: phone.replace(/[^0-9]/g, "").slice(0, 10) } : {}),
         ...(hasPerformanceTitle ? { performanceTitle } : {}),
-        ...(hasDuration ? { duration } : {}),
         ...(teamMembersArray ? { teamMembers: teamMembersArray as Prisma.InputJsonValue } : {}),
         ...(paymentScreenshotUrl ? { paymentScreenshot: paymentScreenshotUrl } : {}),
         ...(scriptFileUrl ? { scriptFile: scriptFileUrl } : {}),
@@ -279,7 +271,6 @@ export async function POST(request: NextRequest) {
         college: reg.college,
         performanceType: reg.performanceType,
         performanceTitle: reg.performanceTitle,
-        duration: reg.duration,
         teamMembers: tmString,
         paymentStatus: reg.paymentStatus,
         requiresReupload: reg.requiresReupload,
