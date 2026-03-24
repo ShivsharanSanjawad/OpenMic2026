@@ -29,7 +29,7 @@ export default function MicHero({ showLegacyLink = false }: { showLegacyLink?: b
         <div className="relative -translate-y-[55%] select-none text-center sm:-translate-y-[28%]">
           {/* Main large "10" — curtain feel: edges dark, center faintly lit */}
           <span
-            className="block font-heading text-[clamp(120px,30vw,220px)] leading-[0.8] text-amber-200/[0.11] sm:text-[clamp(160px,30vw,420px)]"
+            className="block font-heading text-[clamp(150px,36vw,280px)] leading-[0.8] text-amber-200/[0.11] sm:text-[clamp(200px,34vw,500px)]"
             style={{
               textShadow:
                 "0 0 60px rgba(245,175,50,0.22), 0 0 160px rgba(245,158,11,0.08)",
