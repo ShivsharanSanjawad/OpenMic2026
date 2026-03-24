@@ -4,7 +4,7 @@ import { useRef, useCallback } from "react";
 import { useMicScene } from "./MicScene";
 import Link from "next/link";
 
-export default function MicHero() {
+export default function MicHero({ showLegacyLink = false }: { showLegacyLink?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { updateMouse } = useMicScene(containerRef);
 
@@ -191,12 +191,14 @@ export default function MicHero() {
           >
             Register to Perform
           </Link>
-          <Link
-            href="/legacy"
-            className="rounded-full border border-white/20 px-6 py-2.5 text-center font-mono text-[11px] uppercase tracking-widest text-white/70 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:text-white sm:px-8 sm:py-3 sm:text-sm"
-          >
-            10 Years of Legacy
-          </Link>
+          {showLegacyLink && (
+            <Link
+              href="/legacy"
+              className="rounded-full border border-white/20 px-6 py-2.5 text-center font-mono text-[11px] uppercase tracking-widest text-white/70 backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:text-white sm:px-8 sm:py-3 sm:text-sm"
+            >
+              10 Years of Legacy
+            </Link>
+          )}
         </div>
 
         <div className="pointer-events-none flex flex-wrap justify-center gap-2 sm:gap-3">

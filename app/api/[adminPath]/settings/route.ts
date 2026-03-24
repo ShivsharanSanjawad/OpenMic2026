@@ -47,6 +47,7 @@ export async function PUT(
   const eventVenue = sanitizeText(formData.get("event_venue"), 180);
   const formFieldsRaw = sanitizeText(formData.get("form_fields"), 4000);
   const registrationsOpen = formData.get("registrations_open");
+  const legacy10YearEnabled = formData.get("legacy_10_year_enabled");
   const qrImage = formData.get("qrImage");
 
   if (upiId) await setSetting("upi_id", upiId);
@@ -58,6 +59,9 @@ export async function PUT(
   // registrations_open can be "true" or "false" — always update when field is present
   if (registrationsOpen !== null && registrationsOpen !== undefined) {
     await setSetting("registrations_open", registrationsOpen === "true" ? "true" : "false");
+  }
+  if (legacy10YearEnabled !== null && legacy10YearEnabled !== undefined) {
+    await setSetting("legacy_10_year_enabled", legacy10YearEnabled === "true" ? "true" : "false");
   }
 
   if (qrImage instanceof File && qrImage.size > 0) {

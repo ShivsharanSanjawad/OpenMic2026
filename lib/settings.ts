@@ -10,6 +10,7 @@ const defaults: PublicSettings = {
   event_date: "TBD",
   event_venue: "TBD",
   registrations_open: "true",
+  legacy_10_year_enabled: "false",
 };
 
 export async function getSetting(key: keyof PublicSettings) {
@@ -43,6 +44,7 @@ export async function getPublicSettings(): Promise<PublicSettings> {
     "event_date",
     "event_venue",
     "registrations_open",
+    "legacy_10_year_enabled",
   ];
 
   const entries = await Promise.all(keys.map(async (key) => [key, await getSetting(key)] as const));

@@ -15,17 +15,20 @@ export function QRUploader({
   basePath,
   initialQr,
   initialOpen,
+  initialLegacyEnabled,
   initialAmounts,
 }: {
   basePath: string;
   initialQr: string;
   initialOpen: boolean;
+  initialLegacyEnabled: boolean;
   initialAmounts: { solo: string; group: string };
 }) {
   const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const [preview, setPreview] = useState(initialQr);
   const [saving, setSaving] = useState(false);
   const [regOpen, setRegOpen] = useState(initialOpen);
+  const [legacyEnabled, setLegacyEnabled] = useState(initialLegacyEnabled);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,6 +38,7 @@ export function QRUploader({
     const formData = new FormData(event.currentTarget);
     // Explicitly send current toggle value (checkbox only sends when checked)
     formData.set("registrations_open", regOpen ? "true" : "false");
+    formData.set("legacy_10_year_enabled", legacyEnabled ? "true" : "false");
     const response = await fetch(`/api/${basePath}/settings`, { method: "PUT", body: formData });
     const raw = await response.text();
     let data: { error?: string; settings?: { upi_qr_url?: string } } = {};
@@ -83,6 +87,29 @@ export function QRUploader({
           >
             <span
               className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${regOpen ? "translate-x-5" : "translate-x-0"}`}
+            />
+          </button>
+        </div>
+
+        {/* Legacy page visibility toggle */}
+        <div className={`flex items-center justify-between rounded-xl border p-4 transition-colors ${legacyEnabled ? "border-amber-500/40 bg-amber-500/10" : "border-zinc-600/60 bg-zinc-800/40"}`}>
+          <div>
+            <p className={`font-semibold text-sm ${legacyEnabled ? "text-amber-300" : "text-zinc-300"}`}>
+              10-Year Legacy Page {legacyEnabled ? "Visible" : "Hidden"}
+            </p>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              {legacyEnabled ? "Legacy section and page are available on the website." : "Legacy section and page are hidden from users."}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLegacyEnabled((v) => !v)}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${legacyEnabled ? "bg-amber-500" : "bg-zinc-600"}`}
+            role="switch"
+            aria-checked={legacyEnabled}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${legacyEnabled ? "translate-x-5" : "translate-x-0"}`}
             />
           </button>
         </div>

@@ -17,4 +17,5 @@ export type PublicSettings = {
   event_date: string;
   event_venue: string;
   registrations_open: string; // "true" | "false"
+  legacy_10_year_enabled: string; // "true" | "false"
 };

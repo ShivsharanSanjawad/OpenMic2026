@@ -15,10 +15,11 @@ export default async function Home() {
       take: 3,
     }),
   ]);
+  const showLegacy = settings.legacy_10_year_enabled === "true";
 
   return (
     <main className="bg-[#020617]">
-      <MicHero />
+      <MicHero showLegacyLink={showLegacy} />
 
       {/* ── Promo Video ── */}
       <section className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-28">
@@ -100,59 +101,63 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── 10 Years of OpenMic ── */}
-      <section className="relative mx-auto max-w-5xl px-5 py-16 sm:px-6 sm:py-28">
-        {/* Gold divider — top */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+      {showLegacy && (
+        <>
+          {/* ── 10 Years of OpenMic ── */}
+          <section className="relative mx-auto max-w-5xl px-5 py-16 sm:px-6 sm:py-28">
+            {/* Gold divider — top */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
 
-        <div className="text-center">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400/70 sm:text-[11px] sm:tracking-[0.35em]">
-            A decade on stage
-          </p>
-          <h2 className="mt-3 font-heading text-5xl tracking-wide text-white sm:text-6xl md:text-7xl">
-            10 Years of OpenMic
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-zinc-400 sm:mt-5 sm:text-lg">
-            A decade of voices, stories, and performances that lit up the stage.
-            From a small room to a packed auditorium — this is where it all started.
-          </p>
-        </div>
-
-        {/* Stats row */}
-        <div className="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-4 sm:mt-14 sm:grid-cols-4 sm:gap-6">
-          {[
-            { value: "10", label: "Editions" },
-            { value: "120+", label: "Performers" },
-            { value: "1000+", label: "Audience" },
-            { value: "5+", label: "Art Forms" },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-5 text-center backdrop-blur-sm sm:px-5 sm:py-6"
-            >
-              <p className="font-heading text-3xl text-amber-400 sm:text-4xl">
-                {stat.value}
+            <div className="text-center">
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400/70 sm:text-[11px] sm:tracking-[0.35em]">
+                A decade on stage
               </p>
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-zinc-500 sm:text-[10px]">
-                {stat.label}
+              <h2 className="mt-3 font-heading text-5xl tracking-wide text-white sm:text-6xl md:text-7xl">
+                10 Years of OpenMic
+              </h2>
+              <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-zinc-400 sm:mt-5 sm:text-lg">
+                A decade of voices, stories, and performances that lit up the stage.
+                From a small room to a packed auditorium — this is where it all started.
               </p>
             </div>
-          ))}
-        </div>
 
-        {/* CTA */}
-        <div className="mt-10 text-center sm:mt-14">
-          <Link
-            href="/legacy"
-            className="inline-block rounded-full border border-amber-400/30 bg-amber-400/[0.08] px-8 py-3 font-mono text-[11px] uppercase tracking-widest text-amber-300 shadow-lg shadow-amber-900/10 transition-all duration-300 hover:scale-105 hover:border-amber-400/50 hover:bg-amber-400/[0.14] active:scale-95 sm:px-10 sm:py-3.5 sm:text-sm"
-          >
-            Explore the Legacy →
-          </Link>
-        </div>
+            {/* Stats row */}
+            <div className="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-4 sm:mt-14 sm:grid-cols-4 sm:gap-6">
+              {[
+                { value: "10", label: "Editions" },
+                { value: "120+", label: "Performers" },
+                { value: "1000+", label: "Audience" },
+                { value: "5+", label: "Art Forms" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-5 text-center backdrop-blur-sm sm:px-5 sm:py-6"
+                >
+                  <p className="font-heading text-3xl text-amber-400 sm:text-4xl">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-zinc-500 sm:text-[10px]">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
 
-        {/* Gold divider — bottom */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
-      </section>
+            {/* CTA */}
+            <div className="mt-10 text-center sm:mt-14">
+              <Link
+                href="/legacy"
+                className="inline-block rounded-full border border-amber-400/30 bg-amber-400/[0.08] px-8 py-3 font-mono text-[11px] uppercase tracking-widest text-amber-300 shadow-lg shadow-amber-900/10 transition-all duration-300 hover:scale-105 hover:border-amber-400/50 hover:bg-amber-400/[0.14] active:scale-95 sm:px-10 sm:py-3.5 sm:text-sm"
+              >
+                Explore the Legacy →
+              </Link>
+            </div>
+
+            {/* Gold divider — bottom */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+          </section>
+        </>
+      )}
 
       {/* ── About SPARK ── */}
       <section className="relative mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-24">

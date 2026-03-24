@@ -24,6 +24,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ admin
           basePath={adminPath}
           initialQr={settings.upi_qr_url}
           initialOpen={settings.registrations_open === "true"}
+          initialLegacyEnabled={settings.legacy_10_year_enabled === "true"}
           initialAmounts={{
             solo:  settings.payment_amount_solo,
             group: settings.payment_amount_group,

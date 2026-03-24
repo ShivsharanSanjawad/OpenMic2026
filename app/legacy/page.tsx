@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { isLegacy10YearEnabled } from "@/lib/feature-flags";
 
 const editions = [
   {
@@ -73,7 +75,11 @@ const editions = [
   },
 ];
 
-export default function LegacyPage() {
+export default async function LegacyPage() {
+  if (!(await isLegacy10YearEnabled())) {
+    notFound();
+  }
+
   return (
     <main className="min-h-screen bg-[#020617]">
       {/* Hero banner */}
