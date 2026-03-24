@@ -109,7 +109,6 @@ export function RegistrationsTable({ basePath, rows }: { basePath: string; rows:
   const correctionFieldOptions: Array<{ key: string; label: string }> = [
     { key: "paymentScreenshot", label: "Payment Screenshot" },
     { key: "scriptFile", label: "Script File" },
-    { key: "college", label: "College" },
     { key: "phone", label: "Phone" },
     { key: "performanceTitle", label: "Performance Title" },
     { key: "teamMembers", label: "Team Members" },

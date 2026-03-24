@@ -6,7 +6,6 @@ type LookupResponse = {
   id: string;
   name: string;
   phone: string;
-  college: string | null;
   performanceType: string;
   performanceTitle: string | null;
   teamMembers: string | null;
@@ -92,19 +91,17 @@ export function RegistrationStatusLookup() {
 
     const screenshot = formData.get("paymentScreenshot");
     const script = formData.get("scriptFile");
-    const college = String(formData.get("college") ?? "").trim();
     const phone = String(formData.get("phone") ?? "").trim();
     const performanceTitle = String(formData.get("performanceTitle") ?? "").trim();
     const teamMembers = String(formData.get("teamMembers") ?? "").trim();
 
     const hasScreenshot = screenshot instanceof File && screenshot.size > 0;
     const hasScript = script instanceof File && script.size > 0;
-    const hasCollege = canEdit("college") && Boolean(college);
     const hasPhone = canEdit("phone") && Boolean(phone);
     const hasPerformanceTitle = canEdit("performanceTitle") && Boolean(performanceTitle);
     const hasTeamMembers = canEdit("teamMembers") && Boolean(teamMembers);
 
-    if (!hasScreenshot && !hasScript && !hasCollege && !hasPhone && !hasPerformanceTitle && !hasTeamMembers) {
+    if (!hasScreenshot && !hasScript && !hasPhone && !hasPerformanceTitle && !hasTeamMembers) {
       setError("Please submit at least one allowed correction field.");
       return;
     }
@@ -168,7 +165,6 @@ export function RegistrationStatusLookup() {
               <div><span className="text-zinc-400">Name:</span> <span className="text-zinc-200">{result.name}</span></div>
               <div><span className="text-zinc-400">Performance Type:</span> <span className="text-zinc-200">{result.performanceType}</span></div>
               <div><span className="text-zinc-400">Phone:</span> <span className="text-zinc-200">{result.phone}</span></div>
-              <div><span className="text-zinc-400">College:</span> <span className="text-zinc-200">{result.college ?? "-"}</span></div>
               <div><span className="text-zinc-400">Performance Title:</span> <span className="text-zinc-200">{result.performanceTitle ?? "-"}</span></div>
               <div><span className="text-zinc-400">Team Members:</span> <span className="text-zinc-200">{result.teamMembers ?? "-"}</span></div>
               <div><span className="text-zinc-400">Status:</span> <span className={`font-medium ${statusColor}`}>{result.paymentStatus}</span></div>
@@ -207,17 +203,6 @@ export function RegistrationStatusLookup() {
                       type="file"
                       accept="image/jpeg,image/jpg,image/png,image/webp"
                       className="input-field file:mr-4 file:rounded-md file:border-0 file:bg-zinc-700 file:px-3 file:py-1 file:text-zinc-200"
-                    />
-                  </div>
-                )}
-                {canEdit("college") && (
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-1">College</label>
-                    <input
-                      name="college"
-                      defaultValue={result.college ?? ""}
-                      placeholder="College"
-                      className="input-field"
                     />
                   </div>
                 )}

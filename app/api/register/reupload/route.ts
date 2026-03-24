@@ -22,7 +22,6 @@ const allowedScriptMimeTypes = new Set([
 const editableFieldOptions = [
   "paymentScreenshot",
   "scriptFile",
-  "college",
   "phone",
   "performanceTitle",
   "teamMembers",
@@ -48,7 +47,6 @@ export async function POST(request: NextRequest) {
   const registrationId = sanitizeText(formData.get("registrationId"), 60);
   const screenshot = formData.get("paymentScreenshot");
   const script = formData.get("scriptFile");
-  const college = sanitizeText(formData.get("college"), 140);
   const phone = sanitizeText(formData.get("phone"), 20);
   const performanceTitle = sanitizeText(formData.get("performanceTitle"), 140);
   const teamMembers = sanitizeText(formData.get("teamMembers"), 400);
@@ -86,7 +84,6 @@ export async function POST(request: NextRequest) {
 
   const hasScreenshot = screenshot instanceof File && screenshot.size > 0;
   const hasScript = script instanceof File && script.size > 0;
-  const hasCollege = Boolean(college);
   const hasPhone = Boolean(phone);
   const hasPerformanceTitle = Boolean(performanceTitle);
   const hasTeamMembers = Boolean(teamMembers);
@@ -97,10 +94,6 @@ export async function POST(request: NextRequest) {
 
   if (hasScript && !allowedFields.has("scriptFile")) {
     return NextResponse.json({ error: "Script updates are not allowed for this registration" }, { status: 400 });
-  }
-
-  if (hasCollege && !allowedFields.has("college")) {
-    return NextResponse.json({ error: "College updates are not allowed for this registration" }, { status: 400 });
   }
 
   if (hasPhone && !allowedFields.has("phone")) {
@@ -115,7 +108,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Team member updates are not allowed for this registration" }, { status: 400 });
   }
 
-  if (!hasScreenshot && !hasScript && !hasCollege && !hasPhone && !hasPerformanceTitle && !hasTeamMembers) {
+  if (!hasScreenshot && !hasScript && !hasPhone && !hasPerformanceTitle && !hasTeamMembers) {
     return NextResponse.json({ error: "Submit at least one allowed correction field" }, { status: 400 });
   }
 
@@ -186,7 +179,6 @@ export async function POST(request: NextRequest) {
         adminComment: null,
         requiresReupload: false,
         allowedCorrectionFields: [],
-        ...(hasCollege ? { college } : {}),
         ...(hasPhone ? { phone: phone.replace(/[^0-9]/g, "").slice(0, 10) } : {}),
         ...(hasPerformanceTitle ? { performanceTitle } : {}),
         ...(teamMembersArray ? { teamMembers: teamMembersArray as Prisma.InputJsonValue } : {}),

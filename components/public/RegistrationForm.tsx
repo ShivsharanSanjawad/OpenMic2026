@@ -228,7 +228,6 @@ export function RegistrationForm({ settings }: Props) {
               <p className="text-xs text-amber-300/80">⚠️ Double-check this. Your Registration ID and all updates will be sent to this email.</p>
             </div>
             <Input name="phone" label="Phone Number" required maxLength={10} />
-            <Input name="college" label="College / Institution" />
 
             <CustomSelect
               name="performanceType"
@@ -242,7 +241,7 @@ export function RegistrationForm({ settings }: Props) {
               ]}
             />
 
-            <Input name="performanceTitle" label="Performance Title" placeholder="e.g. My Amazing Song" />
+            <Input name="performanceTitle" label="Performance Title" required placeholder="e.g. My Amazing Song" />
 
             {/* Selection summary */}
             <div className="flex flex-col justify-center rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] px-5 py-4 gap-1">

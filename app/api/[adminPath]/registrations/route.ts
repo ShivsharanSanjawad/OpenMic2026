@@ -10,7 +10,6 @@ import { sendPaymentRejectedEmail, sendPaymentVerifiedEmail } from "@/lib/email"
 const correctionFieldOptions = [
   "paymentScreenshot",
   "scriptFile",
-  "college",
   "phone",
   "performanceTitle",
   "teamMembers",

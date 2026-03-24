@@ -30,9 +30,8 @@ const schema = z.object({
   name: z.string().min(2).max(100),
   email: z.email(),
   phone: z.string().regex(/^\d{10}$/),
-  college: z.string().max(140).optional(),
   performanceType: z.enum(["solo", "group"]),
-  performanceTitle: z.string().max(140).optional(),
+  performanceTitle: z.string().min(1).max(140),
   teamMembers: z.string().max(400).optional(),
 });
 
@@ -94,7 +93,6 @@ export async function POST(request: NextRequest) {
     name: sanitizeText(formData.get("name")),
     email: sanitizeText(formData.get("email")),
     phone: sanitizePhone(sanitizeText(formData.get("phone"))),
-    college: sanitizeText(formData.get("college")),
     performanceType: sanitizeText(formData.get("performanceType")).toLowerCase(),
     performanceTitle: sanitizeText(formData.get("performanceTitle")),
     teamMembers: sanitizeText(formData.get("teamMembers"), 400),
@@ -175,7 +173,6 @@ export async function POST(request: NextRequest) {
       name: parsed.data.name,
       email: parsed.data.email,
       phone: parsed.data.phone,
-      college: parsed.data.college,
       performanceType: parsed.data.performanceType,
       performanceTitle: parsed.data.performanceTitle,
       paymentScreenshot: screenshotUrl,
