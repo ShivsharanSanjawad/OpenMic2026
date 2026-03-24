@@ -42,7 +42,7 @@ export function RegistrationStatusLookup() {
       minute: "2-digit",
       second: "2-digit",
       hour12: false,
-      timeZone: "UTC",
+      timeZone: "Asia/Kolkata",
     }).format(new Date(value));
   }
 
@@ -176,7 +176,7 @@ export function RegistrationStatusLookup() {
               {result.canReupload && (
                 <div className="md:col-span-2"><span className="text-zinc-400">Editable Fields:</span> <span className="text-amber-300">{(result.allowedCorrectionFields ?? []).join(", ")}</span></div>
               )}
-              <div className="md:col-span-2"><span className="text-zinc-400">Last Updated:</span> <span className="text-zinc-200">{formatDate(result.updatedAt)} UTC</span></div>
+              <div className="md:col-span-2"><span className="text-zinc-400">Last Updated:</span> <span className="text-zinc-200">{formatDate(result.updatedAt)} IST</span></div>
             </div>
           </div>
 
@@ -290,7 +290,7 @@ export function RegistrationStatusLookup() {
                       <div className="flex flex-wrap gap-4 text-xs text-zinc-400">
                         <span>Status: {item.status}</span>
                         <span>Reupload: {item.requiresReupload ? "Yes" : "No"}</span>
-                        <span>{formatDate(item.createdAt)} UTC</span>
+                        <span>{formatDate(item.createdAt)} IST</span>
                       </div>
                       {item.requiresReupload && (item.allowedCorrectionFields ?? []).length > 0 && (
                         <p className="text-xs text-amber-400 mt-1">Editable: {(item.allowedCorrectionFields ?? []).join(", ")}</p>

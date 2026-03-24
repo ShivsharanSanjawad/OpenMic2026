@@ -86,8 +86,8 @@ function formatDateTime(dateValue: string) {
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-    timeZone: "UTC",
-  }).format(new Date(dateValue)) + " UTC";
+    timeZone: "Asia/Kolkata",
+  }).format(new Date(dateValue)) + " IST";
 }
 
 type UpdateResponse = {

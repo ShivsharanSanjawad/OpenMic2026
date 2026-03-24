@@ -60,7 +60,18 @@ export default async function Home() {
               Feel the energy
             </p>
 
-            <h2 className="mt-3 font-heading text-4xl tracking-wide text-white sm:text-5xl lg:text-6xl">
+            {settings.event_date && (
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 sm:px-5 sm:py-2.5">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-300 sm:text-xs">
+                  Save the Date
+                </span>
+                <span className="font-heading text-xl tracking-wide text-amber-300 sm:text-2xl">
+                  {settings.event_date}
+                </span>
+              </div>
+            )}
+
+            <h2 className="mt-5 font-heading text-4xl tracking-wide text-white sm:text-5xl lg:text-6xl">
               Step Into the<br />Spotlight
             </h2>
 
@@ -83,13 +94,6 @@ export default async function Home() {
                 ),
               )}
             </div>
-
-            {/* Event date */}
-            {settings.event_date && (
-              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:mt-8 sm:text-xs">
-                Save the Date — <span className="text-amber-400/80">{settings.event_date}</span>
-              </p>
-            )}
 
             <Link
               href="/register"
