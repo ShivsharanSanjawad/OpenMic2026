@@ -4,8 +4,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { uploadImageToCloudinary, uploadScriptToCloudinary } from "@/lib/cloudinary";
 import { saveImageLocally, saveScriptLocally } from "@/lib/local-upload";
-import { checkRateLimit } from "@/lib/rate-limit";
-import { assertAllowedOrigin, getClientIp, sanitizeJsonInput, sanitizePhone, sanitizeText } from "@/lib/security";
+import { assertAllowedOrigin, sanitizeJsonInput, sanitizePhone, sanitizeText } from "@/lib/security";
 import { getPublicSettings } from "@/lib/settings";
 import { sendRegistrationEmail } from "@/lib/email";
 
@@ -41,17 +40,8 @@ export async function POST(request: NextRequest) {
   }
 
   const isDev = process.env.NODE_ENV !== "production";
-  const disableRateLimit = process.env.DISABLE_REGISTER_RATE_LIMIT === "true" || isDev;
   const disableCloudinary = process.env.DISABLE_CLOUDINARY === "true";
   const disableGmail = process.env.DISABLE_GMAIL === "true";
-
-  const ip = getClientIp(request);
-  if (!disableRateLimit) {
-    const limit = checkRateLimit(`register:${ip}`, 3, 60 * 60 * 1000);
-    if (!limit.allowed) {
-      return NextResponse.json({ error: "Rate limit exceeded. Try again later." }, { status: 429 });
-    }
-  }
 
   // Check if registrations are open
   const { registrations_open } = await getPublicSettings();
